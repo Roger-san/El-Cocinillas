@@ -1,0 +1,39 @@
+nav {
+  width: 100vw;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between !important;
+  padding: 0.5rem 2rem;
+  margin-bottom: 1rem;
+}
+ul {
+  list-style: none;
+}
+.card {
+  width: 16rem !important;
+  margin: 0.5rem;
+}
+.collapse {
+  flex-grow: unset !important;
+  padding-right: 1rem;
+}
+.container {
+  max-width: 80vw !important;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+footer {
+  position: fixed;
+  width: 100vw;
+  bottom: 0px;
+  display: flex !important;
+  justify-content: center;
+  align-content: center;
+  background-color: black;
+  color: white;
+}
+footer > p {
+  margin: 0.5rem;
+  font-weight: bold;
+}
