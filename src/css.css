@@ -37,3 +37,6 @@ footer > p {
   margin: 0.5rem;
   font-weight: bold;
 }
+.ingredients > label {
+  display: inline !important;
+}
