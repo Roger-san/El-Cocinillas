@@ -22,7 +22,7 @@ export default class Ingredients extends Component {
     return (
       <div className="ingredient">
         <label>
-          Ingredientes:{" "}
+          Ingredients:{" "}
           <input
             type="text"
             name="ingredient"
@@ -32,7 +32,7 @@ export default class Ingredients extends Component {
         </label>
 
         <label>
-          Cantidad:{" "}
+          Quantity:{" "}
           <input
             type="text"
             name="quantity"

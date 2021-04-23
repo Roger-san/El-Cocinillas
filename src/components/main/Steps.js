@@ -15,7 +15,7 @@ export default class Steps extends Component {
     return (
       <div className="step">
         <label>
-          Pasos:{" "}
+          Steps:{" "}
           <input
             type="text"
             name="steps"

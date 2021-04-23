@@ -4,10 +4,11 @@ const Schema = mongoose.Schema
 
 const loginSchema = new Schema(
   {
+    name: String,
     email: String,
     password: String
   },
-  {versionKey: false}
+  { versionKey: false }
 )
 
 module.exports = mongoose.model("Login", loginSchema)

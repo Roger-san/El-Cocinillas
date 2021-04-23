@@ -1,5 +1,5 @@
 nav {
-  width: 100vw;
+  width: 100%;
   display: flex;
   flex-flow: row;
   justify-content: space-between !important;
@@ -37,6 +37,12 @@ footer > p {
   margin: 0.5rem;
   font-weight: bold;
 }
-.ingredients > label {
+.ingredient > label {
   display: inline !important;
 }
+label {
+  display: block !important;
+}
+/* .modal-backdrop {
+  visibility: hidden;
+} */

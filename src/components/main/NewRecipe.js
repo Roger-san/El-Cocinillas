@@ -58,7 +58,8 @@ export default class NewRecipe extends Component {
   render() {
     return (
       <div>
-        <InputType name_id="name">Nombre receta: </InputType>
+        <InputType name_id="author">Author's name: </InputType>
+        <InputType name_id="name">Recipe name: </InputType>
         <InputType name_id="description">Descripcion: </InputType>
 
         <div id="stepsContainer">
@@ -81,7 +82,7 @@ export default class NewRecipe extends Component {
         </div>
 
         <label>
-          Imagen principal: <input type="text" name="frontImage" id="frontImage" />
+          Image: <input type="text" name="frontImage" id="frontImage" />
         </label>
         <button onClick="">send</button>
       </div>
