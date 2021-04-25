@@ -23,21 +23,30 @@ export default class Register extends Component {
   handleFetch = () => {
     const { author, email, password } = this.state
     const newUser = { author: author, email: email, password: password }
-    const URL = "http://localhost:3001/api/users/register"
+    const cloud = false
+    const heroku = cloud ? "" : "http://localhost:3001"
+    const URL = `${heroku}/api/users/register`
     const opts = {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(newUser)
     }
+    console.log(this.state)
     fetch(URL, opts)
       .then((data) => data.json())
       .then((data) => {
-        localStorage.token_el_cocinillas = data.token
-        this.props.handleUserLogin(author, email)
+        if (data.token) {
+          localStorage.token_el_cocinillas = data.token
+          console.log(data)
+          this.props.handleLoggedState(data)
+        }
+
+        console.log(data)
       })
       .catch((err) => console.log(err))
   }
   handleClose = () => {}
+  // importante tener esto
   render() {
     return (
       <>
@@ -83,7 +92,7 @@ export default class Register extends Component {
           </div>{" "}
         </form>
         <div className="modal-footer">
-          <button type="button" className="btn btn-primary" onClick={this.handleClick}>
+          <button type="button" className="btn btn-primary" onClick={this.handleFetch}>
             Send
           </button>
           <button

@@ -2,13 +2,42 @@
 import React, { Component } from "react"
 
 export default class Login extends Component {
+  constructor() {
+    super()
+    this.state = {
+      email: "",
+      password: ""
+    }
+  }
   handleClick = () => {
     this.props.handleChangeState()
   }
-  handleFetch = () => {
-    const email = document.getElementById("email").value
-    const password = document.getElementById("password").value
-    this.props.handleUserLogin(email, password)
+  handleOnChange = (event) => {
+    const { id, value } = event.target
+    if (id === "email") this.setState({ email: value })
+    if (id === "password") this.setState({ password: value })
+  }
+  handleUserLogin = () => {
+    const { email, password } = this.state
+    const user = { email: email, password: password }
+    const cloud = false
+    const heroku = cloud ? "" : "http://localhost:3001"
+    const URL = `${heroku}/api/users/login`
+    const opts = {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(user)
+    }
+    fetch(URL, opts)
+      .then((data) => data.json())
+      .then((data) => {
+        if (data.token) {
+          localStorage.token_el_cocinillas = data.token
+          this.props.handleLoggedState(data)
+        }
+        console.log("user logged", data)
+      })
+      .catch((err) => console.log(err))
   }
   render() {
     return (
@@ -18,7 +47,14 @@ export default class Login extends Component {
         </div>
         <div className="form-group">
           <label> Email: </label>
-          <input type="email" name="email" id="email" max="40" className="form-control" />
+          <input
+            type="email"
+            name="email"
+            id="email"
+            max="40"
+            className="form-control"
+            onChange={this.handleOnChange}
+          />
         </div>
         <div className="form-group">
           <label>
@@ -30,6 +66,7 @@ export default class Login extends Component {
               minLength="6"
               maxLength="16"
               className="form-control"
+              onChange={this.handleOnChange}
             />
           </label>
         </div>
@@ -37,7 +74,11 @@ export default class Login extends Component {
           Register
         </a>
         <div className="modal-footer">
-          <button type="button" className="btn btn-primary" onClick={this.handleFetch}>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={this.handleUserLogin}
+          >
             Send
           </button>
           <button type="button" className="btn btn-secondary" data-dismiss="modal">

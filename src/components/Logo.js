@@ -2,10 +2,13 @@
 import React from "react"
 
 class Logo extends React.Component {
+  handleClick = (event) => {
+    this.props.handleChangePageState(event)
+  }
   render() {
     return (
       <div>
-        <a className="navbar-brand" href="#">
+        <a className="navbar-brand" id="logo" href="#" onClick={this.handleClick}>
           Navbar
         </a>
         <button

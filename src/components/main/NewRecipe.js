@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 /* eslint-disable no-fallthrough */
 import React, { Component } from "react"
 import Steps from "./Steps"
@@ -5,12 +6,12 @@ import Ingredients from "./Ingredients"
 import InputType from "./InputType"
 
 export default class NewRecipe extends Component {
-  constructor() {
+  constructor(props) {
     super()
     this.state = {
-      author: "",
-      name: "",
-      descripcion: String,
+      author: props.userData.author,
+      recipeName: "",
+      description: String,
       ingredients: [""],
       steps: [""],
       frontImage: "",
@@ -25,42 +26,84 @@ export default class NewRecipe extends Component {
         break
       case "ingredients":
         this.setState({ ingredients: data })
-      default:
-        console.log(data)
+        break
+      case "author":
+        this.setState({ author: data })
+        break
+      case "recipeName":
+        this.setState({ recipeName: data })
+        break
+      case "description":
+        this.setState({ description: data })
         break
     }
   }
   handleIngredientsQuantityChange = (event) => {
     if (event.target.className === "addQuantity") {
       this.setState({ ingredientsQuantity: this.state.ingredientsQuantity + 1 })
-      console.log(this.state.ingredientsQuantity)
     }
     if (
       event.target.className === "deleteQuantity" &&
       this.state.ingredientsQuantity !== 1
     ) {
       this.setState({ ingredientsQuantity: this.state.ingredientsQuantity - 1 })
-      console.log(this.state.ingredientsQuantity)
     }
   }
   handleStepsQuantityChange = (event) => {
-    console.log("object")
-
     if (event.target.className === "addStep") {
       this.setState({ stepsQuantity: this.state.stepsQuantity + 1 })
-      console.log(this.state.stepsQuantity)
     }
     if (event.target.className === "deleteStep" && this.state.stepsQuantity !== 1) {
       this.setState({ stepsQuantity: this.state.stepsQuantity - 1 })
-      console.log(this.state.stepsQuantity)
     }
+  }
+  handleFetch = () => {
+    const { author, recipeName, description, ingredients, steps, frontImage } = this.state
+    const newRecipe = {
+      author: author,
+      recipeName: recipeName,
+      description: description,
+      ingredients: ingredients,
+      steps: steps,
+      frontImage: frontImage
+    }
+    const userData = this.props.userData
+    userData.recipes.push(newRecipe)
+    console.log(userData)
+    const cloud = false
+    const heroku = cloud ? "" : "http://localhost:3001"
+    const URL = `${heroku}/api/new-recipe`
+    const opts = {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ newRecipe: newRecipe, userData: userData })
+    }
+    fetch(URL, opts)
+      .then((data) => data.json())
+      .then((data) => {
+        console.log("recipe registred", data)
+      })
+      .catch((err) => console.log(err))
   }
   render() {
     return (
       <div>
-        <InputType name_id="author">Author's name: </InputType>
-        <InputType name_id="name">Recipe name: </InputType>
-        <InputType name_id="description">Descripcion: </InputType>
+        <label>
+          Author name:{" "}
+          <input
+            type="text"
+            name={this.props.name_id}
+            id={this.props.name_id}
+            value={this.props.userData.author}
+            readOnly
+          />
+        </label>
+        <InputType handleValuesChange={this.handleValuesChange} name_id="recipeName">
+          Recipe name:{" "}
+        </InputType>
+        <InputType handleValuesChange={this.handleValuesChange} name_id="description">
+          Description:{" "}
+        </InputType>
 
         <div id="stepsContainer">
           {[...Array(this.state.stepsQuantity)].map((x, i) => (
@@ -84,7 +127,7 @@ export default class NewRecipe extends Component {
         <label>
           Image: <input type="text" name="frontImage" id="frontImage" />
         </label>
-        <button onClick="">send</button>
+        <button onClick={this.handleFetch}>send</button>
       </div>
     )
   }

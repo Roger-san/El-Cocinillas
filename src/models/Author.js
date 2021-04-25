@@ -7,19 +7,19 @@ const Schema = mongoose.Schema
 const recipeSchema = new Schema(
   {
     id: String,
-    name: String,
+    recipeName: String,
     descripcion: String,
     frontImage: String,
-    descriptionImage: String,
+    descriptionImage: String
   },
-  {versionKey: false, _id: false}
+  { versionKey: false, _id: false }
 )
 
 const authorSchema = new Schema(
   {
     author: String,
-    recipes: [recipeSchema],
+    recipes: [recipeSchema]
   },
-  {versionKey: false}
+  { versionKey: false }
 )
 module.exports = mongoose.model("Author", authorSchema)

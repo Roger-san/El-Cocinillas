@@ -10,12 +10,14 @@ import React, { Component } from "react"
 export default class App extends Component {
   constructor() {
     super()
-    this.state = { logged: false, page: "recipes" }
+    this.state = { logged: false, page: "recipes", userData: "" }
   }
   componentDidMount = () => {
     if (localStorage.token_el_cocinillas) {
       const token = { token: localStorage.token_el_cocinillas }
-      const URL = "http://localhost:3001/api/users/token"
+      const cloud = false
+      const heroku = cloud ? "" : "http://localhost:3001"
+      const URL = `${heroku}/api/users/token`
       const opts = {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -23,36 +25,26 @@ export default class App extends Component {
       }
       fetch(URL, opts)
         .then((data) => data.json())
-        .then((data) => console.log(data))
-        .catch((data) => console.log(data))
+        .then((data) => {
+          if (data) this.handleLoggedState(data)
+        })
+        .catch((data) => console.error(data))
     }
   }
-  handleUserLogin = (email, password) => {
-    console.log(email, password)
-    const user = { email: email, password: password }
-    const URL = "http://localhost:3001/api/users/login"
-    const opts = {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(user)
+  handleLoggedState = (data) => {
+    if (document.getElementsByClassName("modal-backdrop").length !== 0) {
+      const modal = document.getElementsByClassName("modal-backdrop")
+      modal[0].style.visibility = "hidden"
     }
-    fetch(URL, opts)
-      .then((data) => data.json())
-      .then((data) => {
-        localStorage.token_el_cocinillas = data.token
-        const modal = document.getElementsByClassName("modal-backdrop")
-        modal[0].style.visibility = "hidden"
-        this.setState({ logged: true })
-        console.log("asdas")
-      })
-      .catch((err) => console.log(err))
+    this.setState({ logged: true, userData: data.authorData })
+    console.log(this.state)
   }
-  handleClick = (event) => {
-    console.log(event)
-    if (event.target.id === "newRecipe")
+  handleChangePageState = (event) => {
+    if (event.target.id === "create-recipe")
       this.state.page !== "newRecipe"
         ? this.setState({ page: "newRecipe" })
         : this.setState({ page: "recipes" })
+    if (event.target.id === "logo") this.setState({ page: "recipes" })
   }
   renderContainer = () => {
     if (this.state.page === "recipes")
@@ -71,7 +63,7 @@ export default class App extends Component {
     if (this.state.page === "newRecipe")
       return (
         <div className="container">
-          <NewRecipe />
+          <NewRecipe userData={this.state.userData} />
         </div>
       )
   }
@@ -79,16 +71,18 @@ export default class App extends Component {
     return (
       <div>
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <Logo />
+          <Logo handleChangePageState={this.handleChangePageState} />
           <SeachBar />
-          <button onClick={this.handleClick} id="newRecipe">
-            New Recipe
-          </button>
-          <Dropdown logged={this.state.logged} />
+          <Dropdown
+            logged={this.state.logged}
+            handleChangePageState={this.handleChangePageState}
+          />
         </nav>
         {this.renderContainer()}
         <Footer />
-        {this.state.logged ? undefined : <Modal handleUserLogin={this.handleUserLogin} />}
+        {this.state.logged ? undefined : (
+          <Modal handleLoggedState={this.handleLoggedState} />
+        )}
       </div>
     )
   }

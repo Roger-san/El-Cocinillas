@@ -18,12 +18,12 @@ export default class Modal extends Component {
             {this.state.login ? (
               <Login
                 handleChangeState={this.handleChangeState}
-                handleUserLogin={this.props.handleUserLogin}
+                handleLoggedState={this.props.handleLoggedState}
               />
             ) : (
               <Register
-                handleUserLogin={this.props.handleUserLogin}
                 handleChangeState={this.handleChangeState}
+                handleLoggedState={this.props.handleLoggedState}
               />
             )}
           </div>

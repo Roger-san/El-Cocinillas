@@ -2,6 +2,9 @@
 import React, { Component } from "react"
 
 export default class UserMenu extends Component {
+  handleOnClick = (event) => {
+    this.props.handleChangePageState(event)
+  }
   render() {
     return (
       <div className="collapse navbar-collapse" id="navbarNavDropdown">
@@ -24,6 +27,14 @@ export default class UserMenu extends Component {
               </a>
               <a className="dropdown-item" href="#">
                 Recipes
+              </a>
+              <a
+                className="dropdown-item"
+                id="create-recipe"
+                href="#"
+                onClick={this.handleOnClick}
+              >
+                Create recipe
               </a>
               <a className="dropdown-item" href="#">
                 Logout
