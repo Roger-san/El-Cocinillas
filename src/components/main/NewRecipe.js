@@ -69,9 +69,10 @@ export default class NewRecipe extends Component {
     }
     const userData = this.props.userData
     userData.recipes.push(newRecipe)
-    console.log(userData)
     const cloud = false
-    const heroku = cloud ? "" : "http://localhost:3001"
+    const heroku = cloud
+      ? "https://el-cocinillas-api.herokuapp.com"
+      : "http://localhost:3001"
     const URL = `${heroku}/api/new-recipe`
     const opts = {
       method: "POST",
@@ -82,6 +83,7 @@ export default class NewRecipe extends Component {
       .then((data) => data.json())
       .then((data) => {
         console.log("recipe registred", data)
+        this.props.handleChangeUserData(data)
       })
       .catch((err) => console.log(err))
   }

@@ -7,7 +7,10 @@ class Dropdown extends React.Component {
     return (
       <div>
         {this.props.logged ? (
-          <UserMenu handleChangePageState={this.props.handleChangePageState} />
+          <UserMenu
+            handleLogOut={this.props.handleLogOut}
+            handleChangePageState={this.props.handleChangePageState}
+          />
         ) : (
           <LoginRegister />
         )}

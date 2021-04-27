@@ -1,8 +1,8 @@
-import SeachBar from "./components/SearchBar"
-import Logo from "./components/Logo"
-import Modal from "./components/Modal/Modal"
+import SeachBar from "./components/nav/SearchBar"
+import Logo from "./components/nav/Logo"
+import Modal from "./components/modal/Modal"
 import RecipeCard from "./components/RecipeCard"
-import Dropdown from "./components/Dropdown"
+import Dropdown from "./components/nav/Dropdown"
 import Footer from "./components/Footer"
 import NewRecipe from "./components/main/NewRecipe"
 import React, { Component } from "react"
@@ -16,7 +16,9 @@ export default class App extends Component {
     if (localStorage.token_el_cocinillas) {
       const token = { token: localStorage.token_el_cocinillas }
       const cloud = false
-      const heroku = cloud ? "" : "http://localhost:3001"
+      const heroku = cloud
+        ? "https://el-cocinillas-api.herokuapp.com"
+        : "http://localhost:3001"
       const URL = `${heroku}/api/users/token`
       const opts = {
         method: "POST",
@@ -26,17 +28,32 @@ export default class App extends Component {
       fetch(URL, opts)
         .then((data) => data.json())
         .then((data) => {
+          console.log("token login", data)
           if (data) this.handleLoggedState(data)
         })
         .catch((data) => console.error(data))
     }
   }
+  handleChangeUserData = (userData) => {
+    this.setState({ userData: userData.data })
+    console.log("New state", userData.data)
+  }
+  handleLogOut = () => {
+    if (localStorage.token_el_cocinillas) localStorage.removeItem("token_el_cocinillas")
+    this.setState({ logged: false })
+  }
   handleLoggedState = (data) => {
+    this.setState({ logged: true, userData: data.authorData })
     if (document.getElementsByClassName("modal-backdrop").length !== 0) {
       const modal = document.getElementsByClassName("modal-backdrop")
-      modal[0].style.visibility = "hidden"
+      modal.forEach((element) => {
+        element.style.visibility = "hidden"
+      })
     }
-    this.setState({ logged: true, userData: data.authorData })
+    // if (document.getElementsByClassName("modal-open").length !== 0) {
+    //   const modal = document.getElementsByClassName("modal-open")
+    //   modal[0].style.visibility = "hidden"
+    // }
     console.log(this.state)
   }
   handleChangePageState = (event) => {
@@ -60,10 +77,13 @@ export default class App extends Component {
           <RecipeCard />
         </div>
       )
-    if (this.state.page === "newRecipe")
+    if (this.state.page === "newRecipe" && this.state.logged)
       return (
         <div className="container">
-          <NewRecipe userData={this.state.userData} />
+          <NewRecipe
+            userData={this.state.userData}
+            handleChangeUserData={this.handleChangeUserData}
+          />
         </div>
       )
   }
@@ -75,6 +95,7 @@ export default class App extends Component {
           <SeachBar />
           <Dropdown
             logged={this.state.logged}
+            handleLogOut={this.handleLogOut}
             handleChangePageState={this.handleChangePageState}
           />
         </nav>

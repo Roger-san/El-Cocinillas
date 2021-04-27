@@ -1,9 +1,17 @@
+/* eslint-disable default-case */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Component } from "react"
 
 export default class UserMenu extends Component {
   handleOnClick = (event) => {
-    this.props.handleChangePageState(event)
+    switch (event.target.id) {
+      case "create-recipe":
+        this.props.handleChangePageState(event)
+        break
+      case "logout":
+        this.props.handleLogOut(event)
+        break
+    }
   }
   render() {
     return (
@@ -22,10 +30,20 @@ export default class UserMenu extends Component {
               User
             </a>
             <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a className="dropdown-item" href="#">
+              {/* <a
+                className="dropdown-item"
+                href="#"
+                id="config"
+                onClick={this.handleOnClick}
+              >
                 Config
-              </a>
-              <a className="dropdown-item" href="#">
+              </a> */}
+              <a
+                className="dropdown-item"
+                href="#"
+                id="recipes"
+                onClick={this.handleOnClick}
+              >
                 Recipes
               </a>
               <a
@@ -36,7 +54,12 @@ export default class UserMenu extends Component {
               >
                 Create recipe
               </a>
-              <a className="dropdown-item" href="#">
+              <a
+                className="dropdown-item"
+                id="logout"
+                href="#"
+                onClick={this.handleOnClick}
+              >
                 Logout
               </a>
             </div>

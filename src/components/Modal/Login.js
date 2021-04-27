@@ -21,7 +21,9 @@ export default class Login extends Component {
     const { email, password } = this.state
     const user = { email: email, password: password }
     const cloud = false
-    const heroku = cloud ? "" : "http://localhost:3001"
+    const heroku = cloud
+      ? "https://el-cocinillas-api.herokuapp.com"
+      : "http://localhost:3001"
     const URL = `${heroku}/api/users/login`
     const opts = {
       method: "POST",
@@ -32,10 +34,10 @@ export default class Login extends Component {
       .then((data) => data.json())
       .then((data) => {
         if (data.token) {
+          console.log("user logged", data)
           localStorage.token_el_cocinillas = data.token
           this.props.handleLoggedState(data)
         }
-        console.log("user logged", data)
       })
       .catch((err) => console.log(err))
   }
