@@ -35,13 +35,7 @@ export default class Register extends Component {
     fetch(URL, opts)
       .then((data) => data.json())
       .then((data) => {
-        if (data.token) {
-          console.log("register succesfull", data)
-          localStorage.token_el_cocinillas = data.token
-          this.props.handleLoggedState(data)
-        }
-
-        console.log(data)
+        this.props.handleLoggedState(data)
       })
       .catch((err) => console.log(err))
   }

@@ -33,11 +33,7 @@ export default class Login extends Component {
     fetch(URL, opts)
       .then((data) => data.json())
       .then((data) => {
-        if (data.token) {
-          console.log("user logged", data)
-          localStorage.token_el_cocinillas = data.token
-          this.props.handleLoggedState(data)
-        }
+        this.props.handleLoggedState(data)
       })
       .catch((err) => console.log(err))
   }

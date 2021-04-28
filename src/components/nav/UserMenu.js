@@ -4,14 +4,8 @@ import React, { Component } from "react"
 
 export default class UserMenu extends Component {
   handleOnClick = (event) => {
-    switch (event.target.id) {
-      case "create-recipe":
-        this.props.handleChangePageState(event)
-        break
-      case "logout":
-        this.props.handleLogOut(event)
-        break
-    }
+    if (event.target.id === "logout") this.props.handleLogOut(event)
+    else this.props.handleChangePageState(event)
   }
   render() {
     return (
@@ -41,7 +35,7 @@ export default class UserMenu extends Component {
               <a
                 className="dropdown-item"
                 href="#"
-                id="recipes"
+                id="authorRecipes"
                 onClick={this.handleOnClick}
               >
                 Recipes

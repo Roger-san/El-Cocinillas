@@ -1,3 +1,4 @@
+/* eslint-disable default-case */
 import SeachBar from "./components/nav/SearchBar"
 import Logo from "./components/nav/Logo"
 import Modal from "./components/modal/Modal"
@@ -10,12 +11,12 @@ import React, { Component } from "react"
 export default class App extends Component {
   constructor() {
     super()
-    this.state = { logged: false, page: "recipes", userData: "" }
+    this.state = { logged: "", page: "loadingRecipes", userData: "", renderedRecipes: [] }
   }
   componentDidMount = () => {
+    const cloud = false
     if (localStorage.token_el_cocinillas) {
       const token = { token: localStorage.token_el_cocinillas }
-      const cloud = false
       const heroku = cloud
         ? "https://el-cocinillas-api.herokuapp.com"
         : "http://localhost:3001"
@@ -28,64 +29,121 @@ export default class App extends Component {
       fetch(URL, opts)
         .then((data) => data.json())
         .then((data) => {
-          console.log("token login", data)
-          if (data) this.handleLoggedState(data)
+          if (data) this.setState({ logged: true, userData: data.authorData })
+          console.log("login by token ", data, this.state)
         })
         .catch((data) => console.error(data))
+    } else {
+      this.setState({ logged: false })
     }
+    this.handleLoadRecipes()
   }
   handleChangeUserData = (userData) => {
     this.setState({ userData: userData.data })
     console.log("New state", userData.data)
+  }
+  handleLoadRecipes = () => {
+    const cloud = false
+    const heroku = cloud
+      ? "https://el-cocinillas-api.herokuapp.com"
+      : "http://localhost:3001"
+    const skip = {
+      skip: this.state.renderedRecipes.length > 1 ? this.state.renderedRecipes.length : 0
+    }
+    const opts = {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(skip)
+    }
+    const URL = `${heroku}/api/recipes`
+    fetch(URL, opts)
+      .then((data) => data.json())
+      .then((data) => {
+        const recipes = this.state.renderedRecipes
+        data.data.forEach((recipe) => recipes.push(recipe))
+        this.setState({ page: "recipes", renderedRecipes: recipes })
+      })
   }
   handleLogOut = () => {
     if (localStorage.token_el_cocinillas) localStorage.removeItem("token_el_cocinillas")
     this.setState({ logged: false })
   }
   handleLoggedState = (data) => {
-    this.setState({ logged: true, userData: data.authorData })
-    if (document.getElementsByClassName("modal-backdrop").length !== 0) {
-      const modal = document.getElementsByClassName("modal-backdrop")
-      modal.forEach((element) => {
-        element.style.visibility = "hidden"
-      })
+    if (data.token) {
+      console.log("register/Login succesfull", data)
+      localStorage.token_el_cocinillas = data.token
+      this.setState({ logged: true, userData: data.authorData })
+      if (document.getElementsByClassName("modal-backdrop").length !== 0) {
+        const modal = [...document.getElementsByClassName("modal-backdrop")]
+        modal.forEach((element) => {
+          element.style.visibility = "hidden"
+        })
+      }
     }
-    // if (document.getElementsByClassName("modal-open").length !== 0) {
-    //   const modal = document.getElementsByClassName("modal-open")
-    //   modal[0].style.visibility = "hidden"
-    // }
-    console.log(this.state)
   }
   handleChangePageState = (event) => {
-    if (event.target.id === "create-recipe")
-      this.state.page !== "newRecipe"
-        ? this.setState({ page: "newRecipe" })
-        : this.setState({ page: "recipes" })
-    if (event.target.id === "logo") this.setState({ page: "recipes" })
+    const { id } = event.target
+    switch (id) {
+      case "create-recipe":
+        this.setState({ page: "newRecipe" })
+        break
+      case "logo":
+        this.setState({ page: "recipes" })
+        break
+      case "authorRecipes":
+        this.setState({ page: "authorRecipes" })
+        console.log(this.state)
+        break
+    }
   }
   renderContainer = () => {
-    if (this.state.page === "recipes")
-      return (
-        <div className="container">
-          <RecipeCard />
-          <RecipeCard />
-          <RecipeCard />
-          <RecipeCard />
-          <RecipeCard />
-          <RecipeCard />
-          <RecipeCard />
-          <RecipeCard />
-        </div>
-      )
-    if (this.state.page === "newRecipe" && this.state.logged)
-      return (
-        <div className="container">
-          <NewRecipe
-            userData={this.state.userData}
-            handleChangeUserData={this.handleChangeUserData}
-          />
-        </div>
-      )
+    switch (this.state.page) {
+      case "loadingRecipes":
+        return (
+          <div className="container">
+            <RecipeCard />
+            <RecipeCard />
+            <RecipeCard />
+            <RecipeCard />
+            <RecipeCard />
+            <RecipeCard />
+            <RecipeCard />
+            <RecipeCard />
+            <RecipeCard />
+            <RecipeCard />
+            <RecipeCard />
+            <RecipeCard />
+          </div>
+        )
+
+      case "newRecipe":
+        return (
+          <div className="container">
+            <NewRecipe
+              userData={this.state.userData}
+              handleChangeUserData={this.handleChangeUserData}
+            />
+          </div>
+        )
+
+      case "authorRecipes":
+        return (
+          <div className="container">
+            {this.state.userData.recipes.map((recipe, i) => (
+              <RecipeCard key={`recipe-${i}`} recipe={recipe} />
+            ))}
+          </div>
+        )
+
+      case "recipes":
+        return (
+          <div className="container">
+            {this.state.renderedRecipes.map((recipe, i) => (
+              <RecipeCard key={`recipe-${i}`} recipe={recipe} />
+            ))}
+          </div>
+        )
+    }
   }
   render() {
     return (

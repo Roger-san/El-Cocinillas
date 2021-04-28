@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react"
 import UserMenu from "./UserMenu"
-import LoginRegister from "./LoginRegister"
 class Dropdown extends React.Component {
   render() {
     return (
@@ -12,7 +11,9 @@ class Dropdown extends React.Component {
             handleChangePageState={this.props.handleChangePageState}
           />
         ) : (
-          <LoginRegister />
+          <a data-toggle="modal" data-target="#staticBackdrop" href="#staticBackdrop">
+            Login
+          </a>
         )}
       </div>
     )

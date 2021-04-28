@@ -6,13 +6,24 @@ class RecipeCard extends React.Component {
     return (
       <div className="card">
         <a href="#">
-          <img src={hamburger} className="card-img-top" alt="hamburger" />
+          <img
+            // {this.props.recipe ? this.props.recipe.frontImage : hamburger}
+            src={hamburger}
+            className="card-img-top"
+            alt="recipe img"
+          />
           <div className="card-body">
-            <h5 className="card-title">Card title</h5>
+            <h5 className="card-title">
+              {this.props.recipe ? this.props.recipe.recipeName : "Card title"}
+            </h5>
             <p className="card-text">
-              Some quick example text to build on the card title and make up the bulk of
-              the card's content.
+              {this.props.recipe
+                ? this.props.recipe.description
+                : "Some quick example text to build on the card title and make up the bulk of the card's content."}
             </p>
+            {this.props.recipe ? (
+              <p className="author">{this.props.recipe.author}</p>
+            ) : undefined}
           </div>
         </a>
       </div>

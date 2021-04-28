@@ -73,7 +73,7 @@ export default class NewRecipe extends Component {
     const heroku = cloud
       ? "https://el-cocinillas-api.herokuapp.com"
       : "http://localhost:3001"
-    const URL = `${heroku}/api/new-recipe`
+    const URL = `${heroku}/api/users/new-recipe`
     const opts = {
       method: "POST",
       headers: { "content-type": "application/json" },
