@@ -159,7 +159,9 @@ export default class App extends Component {
         </nav>
         {this.renderContainer()}
         <Footer />
-        <MainModal handleLoggedState={this.handleLoggedState} />
+        {this.state.logged ? undefined : (
+          <MainModal handleLoggedState={this.handleLoggedState} />
+        )}
       </div>
     )
   }

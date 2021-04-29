@@ -24,7 +24,10 @@ export default class Register extends Component {
     const { author, email, password } = this.state
     const newUser = { author: author, email: email, password: password }
     const cloud = true
-    const heroku = cloud ? "" : "http://localhost:3001"
+    const heroku = cloud
+      ? "https://el-cocinillas-api.herokuapp.com"
+      : "http://localhost:3001"
+
     const URL = `${heroku}/api/users/register`
     const opts = {
       method: "POST",
@@ -87,7 +90,12 @@ export default class Register extends Component {
           <button type="button" className="btn btn-primary" onClick={this.handleFetch}>
             Send
           </button>
-          <button type="button" className="btn btn-secondary" data-dismiss="modal">
+          <button
+            type="button"
+            className="btn btn-secondary"
+            data-dismiss="modal"
+            onClick={this.props.handleChangeState}
+          >
             Close
           </button>
         </div>
