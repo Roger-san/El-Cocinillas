@@ -20,7 +20,7 @@ export default class Login extends Component {
   handleUserLogin = () => {
     const { email, password } = this.state
     const user = { email: email, password: password }
-    const cloud = false
+    const cloud = true
     const heroku = cloud
       ? "https://el-cocinillas-api.herokuapp.com"
       : "http://localhost:3001"
