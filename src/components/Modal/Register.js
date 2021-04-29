@@ -39,8 +39,6 @@ export default class Register extends Component {
       })
       .catch((err) => console.log(err))
   }
-  handleClose = () => {}
-  // importante tener esto
   render() {
     return (
       <>
@@ -89,12 +87,7 @@ export default class Register extends Component {
           <button type="button" className="btn btn-primary" onClick={this.handleFetch}>
             Send
           </button>
-          <button
-            type="button"
-            className="btn btn-secondary"
-            data-dismiss="modal"
-            onClick={this.props.handleChangeState}
-          >
+          <button type="button" className="btn btn-secondary" data-dismiss="modal">
             Close
           </button>
         </div>
