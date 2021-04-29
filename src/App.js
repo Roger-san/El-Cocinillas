@@ -1,7 +1,7 @@
 /* eslint-disable default-case */
 import SeachBar from "./components/nav/SearchBar"
 import Logo from "./components/nav/Logo"
-import Modal from "./components/modal/Modal"
+// import Modal from "./components/modal/Modal"
 import RecipeCard from "./components/RecipeCard"
 import Dropdown from "./components/nav/Dropdown"
 import Footer from "./components/Footer"
@@ -13,57 +13,57 @@ export default class App extends Component {
     super()
     this.state = { logged: "", page: "loadingRecipes", userData: "", renderedRecipes: [] }
   }
-  componentDidMount = () => {
-    const cloud = true
-    if (localStorage.token_el_cocinillas) {
-      const token = { token: localStorage.token_el_cocinillas }
-      const heroku = cloud
-        ? "https://el-cocinillas-api.herokuapp.com"
-        : "http://localhost:3001"
-      const URL = `${heroku}/api/users/token`
-      const opts = {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(token)
-      }
-      fetch(URL, opts)
-        .then((data) => data.json())
-        .then((data) => {
-          if (data) this.setState({ logged: true, userData: data.authorData })
-          console.log("login by token ", data, this.state)
-        })
-        .catch((data) => console.error(data))
-    } else {
-      this.setState({ logged: false })
-    }
-    this.handleLoadRecipes()
-  }
+  // componentDidMount = () => {
+  //   const cloud = true
+  //   if (localStorage.token_el_cocinillas) {
+  //     const token = { token: localStorage.token_el_cocinillas }
+  //     const heroku = cloud
+  //       ? "https://el-cocinillas-api.herokuapp.com"
+  //       : "http://localhost:3001"
+  //     const URL = `${heroku}/api/users/token`
+  //     const opts = {
+  //       method: "POST",
+  //       headers: { "content-type": "application/json" },
+  //       body: JSON.stringify(token)
+  //     }
+  //     fetch(URL, opts)
+  //       .then((data) => data.json())
+  //       .then((data) => {
+  //         if (data) this.setState({ logged: true, userData: data.authorData })
+  //         console.log("login by token ", data, this.state)
+  //       })
+  //       .catch((data) => console.error(data))
+  //   } else {
+  //     this.setState({ logged: false })
+  //   }
+  //   this.handleLoadRecipes()
+  // }
   handleChangeUserData = (userData) => {
     this.setState({ userData: userData.data })
     console.log("New state", userData.data)
   }
-  handleLoadRecipes = () => {
-    const cloud = true
-    const heroku = cloud
-      ? "https://el-cocinillas-api.herokuapp.com"
-      : "http://localhost:3001"
-    const skip = {
-      skip: this.state.renderedRecipes.length > 1 ? this.state.renderedRecipes.length : 0
-    }
-    const opts = {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(skip)
-    }
-    const URL = `${heroku}/api/recipes`
-    fetch(URL, opts)
-      .then((data) => data.json())
-      .then((data) => {
-        const recipes = this.state.renderedRecipes
-        data.data.forEach((recipe) => recipes.push(recipe))
-        this.setState({ page: "recipes", renderedRecipes: recipes })
-      })
-  }
+  // handleLoadRecipes = () => {
+  //   const cloud = true
+  //   const heroku = cloud
+  //     ? "https://el-cocinillas-api.herokuapp.com"
+  //     : "http://localhost:3001"
+  //   const skip = {
+  //     skip: this.state.renderedRecipes.length > 1 ? this.state.renderedRecipes.length : 0
+  //   }
+  //   const opts = {
+  //     method: "POST",
+  //     headers: { "content-type": "application/json" },
+  //     body: JSON.stringify(skip)
+  //   }
+  //   const URL = `${heroku}/api/recipes`
+  //   fetch(URL, opts)
+  //     .then((data) => data.json())
+  //     .then((data) => {
+  //       const recipes = this.state.renderedRecipes
+  //       data.data.forEach((recipe) => recipes.push(recipe))
+  //       this.setState({ page: "recipes", renderedRecipes: recipes })
+  //     })
+  // }
   handleLogOut = () => {
     if (localStorage.token_el_cocinillas) localStorage.removeItem("token_el_cocinillas")
     this.setState({ logged: false })
@@ -159,9 +159,9 @@ export default class App extends Component {
         </nav>
         {this.renderContainer()}
         <Footer />
-        {this.state.logged ? undefined : (
+        {/* {this.state.logged ? undefined : (
           <Modal handleLoggedState={this.handleLoggedState} />
-        )}
+        )} */}
       </div>
     )
   }

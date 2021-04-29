@@ -57,36 +57,36 @@ export default class NewRecipe extends Component {
       this.setState({ stepsQuantity: this.state.stepsQuantity - 1 })
     }
   }
-  handleFetch = () => {
-    const { author, recipeName, description, ingredients, steps, frontImage } = this.state
-    const newRecipe = {
-      author: author,
-      recipeName: recipeName,
-      description: description,
-      ingredients: ingredients,
-      steps: steps,
-      frontImage: frontImage
-    }
-    const userData = this.props.userData
-    userData.recipes.push(newRecipe)
-    const cloud = true
-    const heroku = cloud
-      ? "https://el-cocinillas-api.herokuapp.com"
-      : "http://localhost:3001"
-    const URL = `${heroku}/api/users/new-recipe`
-    const opts = {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ newRecipe: newRecipe, userData: userData })
-    }
-    fetch(URL, opts)
-      .then((data) => data.json())
-      .then((data) => {
-        console.log("recipe registred", data)
-        this.props.handleChangeUserData(data)
-      })
-      .catch((err) => console.log(err))
-  }
+  // handleFetch = () => {
+  //   const { author, recipeName, description, ingredients, steps, frontImage } = this.state
+  //   const newRecipe = {
+  //     author: author,
+  //     recipeName: recipeName,
+  //     description: description,
+  //     ingredients: ingredients,
+  //     steps: steps,
+  //     frontImage: frontImage
+  //   }
+  //   const userData = this.props.userData
+  //   userData.recipes.push(newRecipe)
+  //   const cloud = true
+  //   const heroku = cloud
+  //     ? "https://el-cocinillas-api.herokuapp.com"
+  //     : "http://localhost:3001"
+  //   const URL = `${heroku}/api/users/new-recipe`
+  //   const opts = {
+  //     method: "POST",
+  //     headers: { "content-type": "application/json" },
+  //     body: JSON.stringify({ newRecipe: newRecipe, userData: userData })
+  //   }
+  //   fetch(URL, opts)
+  //     .then((data) => data.json())
+  //     .then((data) => {
+  //       console.log("recipe registred", data)
+  //       this.props.handleChangeUserData(data)
+  //     })
+  //     .catch((err) => console.log(err))
+  // }
   render() {
     return (
       <div>
