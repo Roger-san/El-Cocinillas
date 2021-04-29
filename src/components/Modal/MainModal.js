@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import Login from "./Login"
 import Register from "./Register"
 
-export default class Modal extends Component {
+export default class MainModal extends Component {
   constructor() {
     super()
     this.state = { login: true }

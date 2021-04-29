@@ -1,8 +1,8 @@
 /* eslint-disable default-case */
 import SeachBar from "./components/nav/SearchBar"
 import Logo from "./components/nav/Logo"
-import Modal from "./components/modal/Modal"
 import RecipeCard from "./components/RecipeCard"
+import MainModal from "./components/modal/MainModal"
 import Dropdown from "./components/nav/Dropdown"
 import Footer from "./components/Footer"
 import NewRecipe from "./components/main/NewRecipe"
@@ -160,7 +160,7 @@ export default class App extends Component {
         {this.renderContainer()}
         <Footer />
         {this.state.logged ? undefined : (
-          <Modal handleLoggedState={this.handleLoggedState} />
+          <MainModal handleLoggedState={this.handleLoggedState} />
         )}
       </div>
     )
