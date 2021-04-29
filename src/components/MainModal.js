@@ -1,6 +1,6 @@
 import React, { Component } from "react"
-import Login from "./Login"
-import Register from "./Register"
+import Login from "./modal/Login"
+import Register from "./modal/Register"
 
 export default class MainModal extends Component {
   constructor() {
