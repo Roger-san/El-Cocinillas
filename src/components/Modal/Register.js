@@ -20,25 +20,25 @@ export default class Register extends Component {
         break
     }
   }
-  // handleFetch = () => {
-  //   const { author, email, password } = this.state
-  //   const newUser = { author: author, email: email, password: password }
-  //   const cloud = true
-  //   const heroku = cloud ? "" : "http://localhost:3001"
-  //   const URL = `${heroku}/api/users/register`
-  //   const opts = {
-  //     method: "POST",
-  //     headers: { "content-type": "application/json" },
-  //     body: JSON.stringify(newUser)
-  //   }
-  //   console.log(this.state)
-  //   fetch(URL, opts)
-  //     .then((data) => data.json())
-  //     .then((data) => {
-  //       this.props.handleLoggedState(data)
-  //     })
-  //     .catch((err) => console.log(err))
-  // }
+  handleFetch = () => {
+    const { author, email, password } = this.state
+    const newUser = { author: author, email: email, password: password }
+    const cloud = true
+    const heroku = cloud ? "" : "http://localhost:3001"
+    const URL = `${heroku}/api/users/register`
+    const opts = {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(newUser)
+    }
+    console.log(this.state)
+    fetch(URL, opts)
+      .then((data) => data.json())
+      .then((data) => {
+        this.props.handleLoggedState(data)
+      })
+      .catch((err) => console.log(err))
+  }
   handleClose = () => {}
   // importante tener esto
   render() {
