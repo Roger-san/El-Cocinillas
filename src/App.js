@@ -1,17 +1,25 @@
 /* eslint-disable default-case */
-import SeachBar from "./components/nav/SearchBar"
+// import SeachBar from "./components/nav/SearchBar"
 import Logo from "./components/nav/Logo"
 import RecipeCard from "./components/RecipeCard"
 import MainModal from "./components/mod/MainModal"
 import Dropdown from "./components/nav/Dropdown"
 import Footer from "./components/Footer"
-import NewRecipe from "./components/main/NewRecipe"
+import NewRecipe from "./components/main/new recipe/NewRecipe"
+import Recipe from "./components/main/Recipe"
+
 import React, { Component } from "react"
 
 export default class App extends Component {
   constructor() {
     super()
-    this.state = { logged: "", page: "loadingRecipes", userData: "", renderedRecipes: [] }
+    this.state = {
+      logged: "",
+      page: "loadingRecipes",
+      userData: "",
+      actualRecipe: "",
+      renderedRecipes: []
+    }
   }
   componentDidMount = () => {
     const cloud = true
@@ -96,6 +104,9 @@ export default class App extends Component {
         break
     }
   }
+  handleRenderRecipe = (data) => {
+    this.setState({ page: "recipe", actualRecipe: data })
+  }
   renderContainer = () => {
     switch (this.state.page) {
       case "loadingRecipes":
@@ -139,8 +150,18 @@ export default class App extends Component {
         return (
           <div className="container">
             {this.state.renderedRecipes.map((recipe, i) => (
-              <RecipeCard key={`recipe-${i}`} recipe={recipe} />
+              <RecipeCard
+                key={`recipe-${i}`}
+                recipe={recipe}
+                handleRenderRecipe={this.handleRenderRecipe}
+              />
             ))}
+          </div>
+        )
+      case "recipe":
+        return (
+          <div className="container">
+            <Recipe data={this.state.actualRecipe} />
           </div>
         )
     }
@@ -150,7 +171,7 @@ export default class App extends Component {
       <div>
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
           <Logo handleChangePageState={this.handleChangePageState} />
-          <SeachBar />
+          {/* <SeachBar /> */}
           <Dropdown
             logged={this.state.logged}
             handleLogOut={this.handleLogOut}

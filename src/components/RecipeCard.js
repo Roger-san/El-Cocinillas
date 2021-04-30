@@ -2,9 +2,12 @@
 import React from "react"
 import hamburger from "../img/hamburger.jpg"
 class RecipeCard extends React.Component {
+  handleClick = () => {
+    this.props.handleRenderRecipe(this.props.recipe)
+  }
   render() {
     return (
-      <div className="card">
+      <div className="card" onClick={this.handleClick}>
         <a href="#">
           <img
             // {this.props.recipe ? this.props.recipe.frontImage : hamburger}
