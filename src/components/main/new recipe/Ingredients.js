@@ -20,32 +20,29 @@ export default class Ingredients extends Component {
   }
   render() {
     return (
-      <div className="ingredient">
-        <label>
-          Ingredients:{" "}
+      <div className="ingredient-container">
+        <div className="ingredient">
           <input
             type="text"
             name="ingredient"
-            className="ingredientName"
+            className="ingredient-name"
             onChange={this.handleChange}
+            placeholder="Ingredient"
           />
-        </label>
-
-        <label>
-          Quantity:{" "}
           <input
             type="text"
             name="quantity"
             className="quantity"
             onChange={this.handleChange}
+            placeholder="Quantity"
           />
-          <button onClick={this.handleClick} className="addQuantity">
-            +
-          </button>
-          <button onClick={this.handleClick} className="deleteQuantity">
-            -
-          </button>
-        </label>
+        </div>
+        <button onClick={this.handleClick} className="add">
+          +
+        </button>
+        <button onClick={this.handleClick} className="delete">
+          -
+        </button>
       </div>
     )
   }

@@ -23,7 +23,7 @@ export default class Register extends Component {
   handleFetch = () => {
     const { author, email, password } = this.state
     const newUser = { author: author, email: email, password: password }
-    const cloud = true
+    const cloud = false
     const heroku = cloud
       ? "https://el-cocinillas-api.herokuapp.com"
       : "http://localhost:3001"
@@ -50,26 +50,31 @@ export default class Register extends Component {
         </div>
         <form>
           <div className="form-group">
-            <label>Name: </label>
-            <input
-              type="text"
-              name="author"
-              id="author"
-              max="40"
-              className="form-control"
-              onChange={this.handleOnChange}
-            />
+            <label>
+              Name:
+              <input
+                type="text"
+                name="author"
+                id="author"
+                max="40"
+                className="form-control"
+                onChange={this.handleOnChange}
+              />
+            </label>
           </div>
           <div className="form-group">
-            <label> Email: </label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              max="40"
-              className="form-control"
-              onChange={this.handleOnChange}
-            />
+            <label>
+              {" "}
+              Email:
+              <input
+                type="email"
+                name="email"
+                id="email"
+                max="40"
+                className="form-control"
+                onChange={this.handleOnChange}
+              />
+            </label>
           </div>
           <div className="form-group">
             <label>

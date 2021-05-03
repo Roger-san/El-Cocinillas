@@ -3,7 +3,6 @@
 import React, { Component } from "react"
 import Steps from "./Steps"
 import Ingredients from "./Ingredients"
-import InputType from "./InputType"
 
 export default class NewRecipe extends Component {
   constructor(props) {
@@ -15,8 +14,8 @@ export default class NewRecipe extends Component {
       ingredients: [""],
       steps: [""],
       frontImage: "",
-      ingredientsQuantity: 1,
-      stepsQuantity: 1
+      ingredientsQuantity: 2,
+      stepsQuantity: 2
     }
   }
   handleValuesChange = (data, type) => {
@@ -69,7 +68,7 @@ export default class NewRecipe extends Component {
     }
     const userData = this.props.userData
     userData.recipes.push(newRecipe)
-    const cloud = true
+    const cloud = false
     const heroku = cloud
       ? "https://el-cocinillas-api.herokuapp.com"
       : "http://localhost:3001"
@@ -87,36 +86,31 @@ export default class NewRecipe extends Component {
       })
       .catch((err) => console.log(err))
   }
+  handleChange = (event) => {
+    this.handleValuesChange(event.target.value, this.props.name_id)
+  }
   render() {
     return (
       <div>
-        <label>
-          Author name:{" "}
-          <input
-            type="text"
-            name={this.props.name_id}
-            id={this.props.name_id}
-            value={this.props.userData.author}
-            readOnly
-          />
-        </label>
-        <InputType handleValuesChange={this.handleValuesChange} name_id="recipeName">
-          Recipe name:{" "}
-        </InputType>
-        <InputType handleValuesChange={this.handleValuesChange} name_id="description">
-          Description:{" "}
-        </InputType>
+        <input
+          type="text"
+          name="recipeName"
+          id="recipe-name"
+          onChange={this.handleChange}
+          placeholder="Recipe name"
+        />
 
-        <div id="stepsContainer">
-          {[...Array(this.state.stepsQuantity)].map((x, i) => (
-            <Steps
-              key={`step-${i - 1}`}
-              handleStepsQuantityChange={this.handleStepsQuantityChange}
-              handleValuesChange={this.handleValuesChange}
-            />
-          ))}
-        </div>
-        <div id="ingredientsContainer">
+        {/* poner un max de letras que se vea */}
+        <textarea
+          placeholder="Description"
+          id="description"
+          name="description"
+          rows="4"
+          cols="50"
+          onChange={this.handleChange}
+        ></textarea>
+
+        <div id="ingredients-container">
           {[...Array(this.state.ingredientsQuantity)].map((x, i) => (
             <Ingredients
               key={`ingredient-${i - 1}`}
@@ -125,10 +119,20 @@ export default class NewRecipe extends Component {
             />
           ))}
         </div>
-
-        <label>
-          Image: <input type="text" name="frontImage" id="frontImage" />
-        </label>
+        <div id="steps-container">
+          {[...Array(this.state.stepsQuantity)].map((x, i) => (
+            <Steps
+              key={`step-${i - 1}`}
+              number={i}
+              handleStepsQuantityChange={this.handleStepsQuantityChange}
+              handleValuesChange={this.handleValuesChange}
+            />
+          ))}
+        </div>
+        <div id="file-image-container">
+          <label>Recipe image:</label>{" "}
+          <input type="file" name="fileImage" id="fileImage" />
+        </div>
         <button onClick={this.handleFetch}>send</button>
       </div>
     )

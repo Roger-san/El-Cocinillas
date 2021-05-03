@@ -22,7 +22,7 @@ export default class App extends Component {
     }
   }
   componentDidMount = () => {
-    const cloud = true
+    const cloud = false
     if (localStorage.token_el_cocinillas) {
       const token = { token: localStorage.token_el_cocinillas }
       const heroku = cloud
@@ -38,7 +38,7 @@ export default class App extends Component {
         .then((data) => data.json())
         .then((data) => {
           if (data) this.setState({ logged: true, userData: data.authorData })
-          console.log("login by token ", data, this.state)
+          console.log("data of login by token ", data, "the state is", this.state)
         })
         .catch((data) => console.error(data))
     } else {
@@ -48,10 +48,9 @@ export default class App extends Component {
   }
   handleChangeUserData = (userData) => {
     this.setState({ userData: userData.data })
-    console.log("New state", userData.data)
   }
   handleLoadRecipes = () => {
-    const cloud = true
+    const cloud = false
     const heroku = cloud
       ? "https://el-cocinillas-api.herokuapp.com"
       : "http://localhost:3001"
@@ -74,7 +73,8 @@ export default class App extends Component {
   }
   handleLogOut = () => {
     if (localStorage.token_el_cocinillas) localStorage.removeItem("token_el_cocinillas")
-    this.setState({ logged: false })
+    if (this.state.page === "newRecipe") this.setState({ logged: false, page: "recipes" })
+    else this.setState({ logged: false })
   }
   handleLoggedState = (data) => {
     if (data.token) {
@@ -168,7 +168,7 @@ export default class App extends Component {
   }
   render() {
     return (
-      <div>
+      <>
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
           <Logo handleChangePageState={this.handleChangePageState} />
           {/* <SeachBar /> */}
@@ -183,7 +183,7 @@ export default class App extends Component {
         {this.state.logged ? undefined : (
           <MainModal handleLoggedState={this.handleLoggedState} />
         )}
-      </div>
+      </>
     )
   }
 }

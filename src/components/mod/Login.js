@@ -20,7 +20,7 @@ export default class Login extends Component {
   handleUserLogin = () => {
     const { email, password } = this.state
     const user = { email: email, password: password }
-    const cloud = true
+    const cloud = false
     const heroku = cloud
       ? "https://el-cocinillas-api.herokuapp.com"
       : "http://localhost:3001"
@@ -44,15 +44,18 @@ export default class Login extends Component {
           <h1>Login</h1>
         </div>
         <div className="form-group">
-          <label> Email: </label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            max="40"
-            className="form-control"
-            onChange={this.handleOnChange}
-          />
+          <label>
+            {" "}
+            Email:
+            <input
+              type="email"
+              name="email"
+              id="email"
+              max="40"
+              className="form-control"
+              onChange={this.handleOnChange}
+            />
+          </label>
         </div>
         <div className="form-group">
           <label>

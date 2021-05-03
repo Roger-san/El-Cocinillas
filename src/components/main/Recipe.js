@@ -19,14 +19,12 @@ export default class Recipe extends Component {
     }
     fetch(URL, opts)
       .then((data) => data.json())
-      .then((data) => {
-        this.setState({ authorRecipes: data.data })
-        console.log(this.state)
-      })
+      .then((data) => this.setState({ authorRecipes: data.data }))
   }
   handleRenderAuthorRecipes = () => {
-    console.log("asf", this.state.authorRecipes)
-    return this.state.authorRecipes.map((recipe) => <RecipeCard recipe={recipe} />)
+    return this.state.authorRecipes.map((recipe, i) => (
+      <RecipeCard key={`author-recipe-${i}`} recipe={recipe} />
+    ))
   }
   render() {
     return (
@@ -41,17 +39,22 @@ export default class Recipe extends Component {
           </div>
           <div id="ingredientsContainer"></div>
           {this.props.data.ingredients.map((ingredient, i) => (
-            <>
+            <div key={`ingredient-${i}`}>
               <span key={`ingredient-qty-${i}`}>quantity: {ingredient.quantity} </span>
               <span key={`ingredient-name-${i}`}>
-                ingredient: {ingredient.ingredient}{" "}
+                ingredient: {ingredient.ingredient}
               </span>
-            </>
+            </div>
           ))}
         </div>
-        <div>
-          {this.state.authorRecipes !== "" ? this.handleRenderAuthorRecipes() : undefined}
-        </div>
+        {this.state.authorRecipes !== "" ? (
+          <>
+            <div className="author-recipes-container">
+              <h2>More author recipes:</h2>
+              <div className="author-recipes">{this.handleRenderAuthorRecipes()}</div>
+            </div>
+          </>
+        ) : undefined}
       </>
     )
   }
