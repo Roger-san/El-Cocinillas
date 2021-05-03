@@ -7,7 +7,7 @@ export default class Recipe extends Component {
     this.state = { authorRecipes: "" }
   }
   componentDidMount = () => {
-    const cloud = false
+    const cloud = true
     const heroku = cloud
       ? "https://el-cocinillas-api.herokuapp.com"
       : "http://localhost:3001"

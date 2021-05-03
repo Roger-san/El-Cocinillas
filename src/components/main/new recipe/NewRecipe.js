@@ -68,7 +68,7 @@ export default class NewRecipe extends Component {
     }
     const userData = this.props.userData
     userData.recipes.push(newRecipe)
-    const cloud = false
+    const cloud = true
     const heroku = cloud
       ? "https://el-cocinillas-api.herokuapp.com"
       : "http://localhost:3001"

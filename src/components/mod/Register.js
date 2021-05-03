@@ -23,7 +23,7 @@ export default class Register extends Component {
   handleFetch = () => {
     const { author, email, password } = this.state
     const newUser = { author: author, email: email, password: password }
-    const cloud = false
+    const cloud = true
     const heroku = cloud
       ? "https://el-cocinillas-api.herokuapp.com"
       : "http://localhost:3001"
