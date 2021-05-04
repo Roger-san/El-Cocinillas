@@ -25,7 +25,7 @@ export default class Register extends Component {
     const newUser = { author: author, email: email, password: password }
     const cloud = true
     const heroku = cloud
-      ? "https://el-cocinillas-api.herokuapp.com"
+      ? "https://elcocinillas-api.herokuapp.com"
       : "http://localhost:3001"
 
     const URL = `${heroku}/api/users/register`

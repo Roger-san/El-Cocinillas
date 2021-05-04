@@ -22,7 +22,7 @@ export default class Login extends Component {
     const user = { email: email, password: password }
     const cloud = true
     const heroku = cloud
-      ? "https://el-cocinillas-api.herokuapp.com"
+      ? "https://elcocinillas-api.herokuapp.com"
       : "http://localhost:3001"
     const URL = `${heroku}/api/users/login`
     const opts = {

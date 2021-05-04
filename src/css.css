@@ -1,14 +1,13 @@
-.card {
-  width: 16rem;
+/* modal bug */
+.no-modal {
+  overflow: auto !important;
 }
 /* footer */
 footer > p {
   margin: 0.3rem;
   font-weight: 600;
 }
-.container {
-  padding-bottom: 3rem;
-}
+
 /* new recipe */
 #recipe-name {
   display: block;
@@ -59,8 +58,10 @@ footer > p {
 .add-substract {
   margin-left: 0.5rem;
 }
-.add,
-.delete {
+.add-ingredient,
+.delete-ingredient,
+.add-step,
+.delete-step {
   font-family: Arial, Helvetica, sans-serif;
   border-radius: 120%;
   width: 1.5rem;
@@ -87,8 +88,21 @@ footer > p {
 #file-image-container {
   margin: 1.5rem 0px;
 }
+#file-image-container label {
+  display: inline;
+}
+#fileImage {
+  display: none;
+}
+#file-button {
+  background-color: rgb(239, 239, 239);
+  border: 2px rgb(118, 118, 118) outset;
+  padding: 3px 4px;
+}
+
 /* card css */
 .card {
+  width: 16rem;
   cursor: pointer;
   margin: 0.5rem auto;
   margin-bottom: 2rem;
@@ -111,7 +125,7 @@ footer > p {
 .card-author:hover {
   text-decoration: underline;
 }
-
+/* modal */
 .modal-header,
 .modal-footer {
   border: 0px !important;
@@ -149,40 +163,39 @@ nav {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  padding-bottom: 2rem;
 }
-/* 
-ul {
-  list-style: none;
+/* individual recipe */
+.recipe-pag {
+  flex-direction: column;
+  justify-content: left;
 }
-.card {
-  width: 16rem !important;
-  margin: 0.5rem;
+.recipe-image {
+  width: 100%;
+  height: auto;
 }
-.collapse {
-  flex-grow: unset !important;
-  padding-right: 1rem;
+#name-description-container {
+  margin-top: 1.5rem;
 }
-
-footer {
-  position: fixed;
-  width: 100vw;
-  bottom: 0px;
-  display: flex !important;
-  justify-content: center;
-  align-content: center;
-  background-color: black;
-  color: white;
+#name-description-container h4 {
+  margin-top: 1rem;
 }
-
-.ingredient > label {
-  display: inline !important;
+#ingredients-container,
+#steps-container {
+  flex-grow: 1;
+  border: 1px #afbbc7 solid;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 1rem;
 }
-label {
-  display: block !important;
+#ingredients-container ul {
+  margin: 0px;
 }
-*/
+.step-span {
+  margin-right: 5px;
+}
 .author-recipes-container {
-  margin-top: 3rem;
+  margin-top: 2rem;
 }
 .author-recipes {
   display: flex;
@@ -194,7 +207,7 @@ label {
     font-size: 0.8rem;
   }
   .card {
-    width: 90%;
+    width: 100%;
     margin-bottom: 2rem !important;
   }
   .container {

@@ -1,5 +1,6 @@
 import RecipeCard from "../RecipeCard"
 import React, { Component } from "react"
+import hamburger from "../hamburger.jpg"
 
 export default class Recipe extends Component {
   constructor() {
@@ -9,7 +10,7 @@ export default class Recipe extends Component {
   componentDidMount = () => {
     const cloud = true
     const heroku = cloud
-      ? "https://el-cocinillas-api.herokuapp.com"
+      ? "https://elcocinillas-api.herokuapp.com"
       : "http://localhost:3001"
     const URL = `${heroku}/api/users/authorRecipes`
     const opts = {
@@ -23,34 +24,44 @@ export default class Recipe extends Component {
   }
   handleRenderAuthorRecipes = () => {
     return this.state.authorRecipes.map((recipe, i) => (
-      <RecipeCard key={`author-recipe-${i}`} recipe={recipe} />
+      <RecipeCard
+        handleRenderRecipe={this.props.handleRenderRecipe}
+        key={`author-recipe-${i}`}
+        recipe={recipe}
+      />
     ))
   }
   render() {
     return (
       <>
-        <div>
-          <p>Author: {this.props.data.author}</p>
-          <p>Description: {this.props.data.description}</p>
-          <div id="stepsContainer">
-            {this.props.data.steps.map((step, i) => (
-              <p key={`step-${i}`}>{step}</p>
+        <img className="recipe-image" src={hamburger} alt="hamburger"></img>
+        <div id="name-description-container">
+          <h2>{this.props.data.recipeName}</h2>
+          <h4>{this.props.data.description}</h4>
+        </div>
+        <div id="ingredients-container">
+          <h4>Ingredients</h4>
+          <ul>
+            {this.props.data.ingredients.map((ingredient, i) => (
+              <li key={`ingredient-${i}`}>
+                <span key={`ingredient-qty-${i}`}>{ingredient.quantity} </span>
+                <span key={`ingredient-name-${i}`}>{ingredient.ingredient}</span>
+              </li>
             ))}
-          </div>
-          <div id="ingredientsContainer"></div>
-          {this.props.data.ingredients.map((ingredient, i) => (
-            <div key={`ingredient-${i}`}>
-              <span key={`ingredient-qty-${i}`}>quantity: {ingredient.quantity} </span>
-              <span key={`ingredient-name-${i}`}>
-                ingredient: {ingredient.ingredient}
-              </span>
+          </ul>
+        </div>
+        <div id="steps-container">
+          {this.props.data.steps.map((step, i) => (
+            <div key={`step-${i}`}>
+              <span className="step-span">Step {i + 1}: </span>
+              <span>{step}</span>
             </div>
           ))}
         </div>
         {this.state.authorRecipes !== "" ? (
           <>
             <div className="author-recipes-container">
-              <h2>More author recipes:</h2>
+              <h3>More author recipes:</h3>
               <div className="author-recipes">{this.handleRenderAuthorRecipes()}</div>
             </div>
           </>

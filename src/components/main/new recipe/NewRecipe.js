@@ -11,49 +11,57 @@ export default class NewRecipe extends Component {
       author: props.userData.author,
       recipeName: "",
       description: String,
-      ingredients: [""],
-      steps: [""],
-      frontImage: "",
-      ingredientsQuantity: 2,
-      stepsQuantity: 2
+      ingredients: [
+        ["", ""],
+        ["", ""]
+      ],
+      steps: ["", ""],
+      frontImage: ""
     }
   }
   handleValuesChange = (data, type) => {
     switch (type) {
-      case "steps":
-        this.setState({ steps: data })
-        break
-      case "ingredients":
-        this.setState({ ingredients: data })
-        break
-      case "author":
-        this.setState({ author: data })
-        break
-      case "recipeName":
+      case "recipe-name":
         this.setState({ recipeName: data })
         break
       case "description":
         this.setState({ description: data })
         break
+      case "ingredients":
+        this.setState({ ingredients: data })
+        break
+      case "steps":
+        this.setState({ steps: data })
+        break
     }
   }
-  handleIngredientsQuantityChange = (event) => {
-    if (event.target.className === "addQuantity") {
-      this.setState({ ingredientsQuantity: this.state.ingredientsQuantity + 1 })
-    }
-    if (
-      event.target.className === "deleteQuantity" &&
-      this.state.ingredientsQuantity !== 1
-    ) {
-      this.setState({ ingredientsQuantity: this.state.ingredientsQuantity - 1 })
-    }
-  }
-  handleStepsQuantityChange = (event) => {
-    if (event.target.className === "addStep") {
-      this.setState({ stepsQuantity: this.state.stepsQuantity + 1 })
-    }
-    if (event.target.className === "deleteStep" && this.state.stepsQuantity !== 1) {
-      this.setState({ stepsQuantity: this.state.stepsQuantity - 1 })
+
+  handleListsQuantityChange = (event, position) => {
+    switch (event.target.className) {
+      case "add-ingredient":
+        return this.setState({
+          ingredientsQuantity: this.state.ingredients.push(["", ""])
+        })
+
+      case "add-step":
+        return this.setState({ stepsQuantity: this.state.steps.push("") })
+
+      case "delete-ingredient":
+        if (this.state.ingredients.length !== 1) {
+          const data = [...this.state.ingredients]
+          data.splice(position, 1)
+          console.log("data", data)
+
+          this.setState({ ingredients: data })
+          console.log("state", this.state.ingredients)
+        }
+
+      case "delete-step":
+        if (this.state.steps.length !== 1) {
+          let data = [...this.state.steps]
+          data.splice(position, 1)
+          this.setState({ steps: data })
+        }
     }
   }
   handleFetch = () => {
@@ -70,7 +78,7 @@ export default class NewRecipe extends Component {
     userData.recipes.push(newRecipe)
     const cloud = true
     const heroku = cloud
-      ? "https://el-cocinillas-api.herokuapp.com"
+      ? "https://elcocinillas-api.herokuapp.com"
       : "http://localhost:3001"
     const URL = `${heroku}/api/users/new-recipe`
     const opts = {
@@ -82,12 +90,15 @@ export default class NewRecipe extends Component {
       .then((data) => data.json())
       .then((data) => {
         console.log("recipe registred", data)
-        this.props.handleChangeUserData(data)
+        if (data.success) {
+          this.props.handleChangeUserData(data)
+          this.props.handleRenderRecipe(data.data.recipes[data.data.recipes.length - 1])
+        }
       })
       .catch((err) => console.log(err))
   }
   handleChange = (event) => {
-    this.handleValuesChange(event.target.value, this.props.name_id)
+    this.handleValuesChange(event.target.value, event.target.id)
   }
   render() {
     return (
@@ -111,27 +122,38 @@ export default class NewRecipe extends Component {
         ></textarea>
 
         <div id="ingredients-container">
-          {[...Array(this.state.ingredientsQuantity)].map((x, i) => (
+          {this.state.ingredients.map((values, i) => (
             <Ingredients
-              key={`ingredient-${i - 1}`}
-              handleIngredientsQuantityChange={this.handleIngredientsQuantityChange}
+              values={values}
+              position={i}
+              key={`ingredient-${i}`}
+              handleListsQuantityChange={this.handleListsQuantityChange}
               handleValuesChange={this.handleValuesChange}
             />
           ))}
         </div>
         <div id="steps-container">
-          {[...Array(this.state.stepsQuantity)].map((x, i) => (
+          {this.state.steps.map((value, i) => (
             <Steps
-              key={`step-${i - 1}`}
-              number={i}
-              handleStepsQuantityChange={this.handleStepsQuantityChange}
+              value={value}
+              position={i}
+              key={`step-${i}`}
+              handleListsQuantityChange={this.handleListsQuantityChange}
               handleValuesChange={this.handleValuesChange}
             />
           ))}
         </div>
         <div id="file-image-container">
-          <label>Recipe image:</label>{" "}
-          <input type="file" name="fileImage" id="fileImage" />
+          <label id="file-button">
+            Add image
+            <input
+              type="file"
+              name="fileImage"
+              id="fileImage"
+              accept="image/*"
+              capture="camera"
+            />
+          </label>{" "}
         </div>
         <button onClick={this.handleFetch}>send</button>
       </div>

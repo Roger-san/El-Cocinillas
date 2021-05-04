@@ -26,7 +26,7 @@ export default class App extends Component {
     if (localStorage.token_el_cocinillas) {
       const token = { token: localStorage.token_el_cocinillas }
       const heroku = cloud
-        ? "https://el-cocinillas-api.herokuapp.com"
+        ? "https://elcocinillas-api.herokuapp.com"
         : "http://localhost:3001"
       const URL = `${heroku}/api/users/token`
       const opts = {
@@ -37,14 +37,18 @@ export default class App extends Component {
       fetch(URL, opts)
         .then((data) => data.json())
         .then((data) => {
-          if (data) this.setState({ logged: true, userData: data.authorData })
+          if (data) {
+            this.setState({ logged: true, userData: data.authorData })
+            this.handleLoadRecipes()
+          }
           console.log("data of login by token ", data, "the state is", this.state)
         })
         .catch((data) => console.error(data))
     } else {
       this.setState({ logged: false })
+      // hace falta un fetch aca que consiga las recipes
+      this.handleLoadRecipes()
     }
-    this.handleLoadRecipes()
   }
   handleChangeUserData = (userData) => {
     this.setState({ userData: userData.data })
@@ -52,7 +56,7 @@ export default class App extends Component {
   handleLoadRecipes = () => {
     const cloud = true
     const heroku = cloud
-      ? "https://el-cocinillas-api.herokuapp.com"
+      ? "https://elcocinillas-api.herokuapp.com"
       : "http://localhost:3001"
     const skip = {
       skip: this.state.renderedRecipes.length > 1 ? this.state.renderedRecipes.length : 0
@@ -87,6 +91,8 @@ export default class App extends Component {
           element.style.visibility = "hidden"
         })
       }
+      if (document.body.className.includes("modal-open"))
+        document.body.className = "no-modal"
     }
   }
   handleChangePageState = (event) => {
@@ -105,6 +111,10 @@ export default class App extends Component {
     }
   }
   handleRenderRecipe = (data) => {
+    if (this.state.page === "recipe") {
+      this.setState({ actualRecipe: data })
+      document.location.href = "#nav"
+    }
     this.setState({ page: "recipe", actualRecipe: data })
   }
   renderContainer = () => {
@@ -131,6 +141,7 @@ export default class App extends Component {
         return (
           <div className="container">
             <NewRecipe
+              handleRenderRecipe={this.handleRenderRecipe}
               userData={this.state.userData}
               handleChangeUserData={this.handleChangeUserData}
             />
@@ -160,8 +171,11 @@ export default class App extends Component {
         )
       case "recipe":
         return (
-          <div className="container">
-            <Recipe data={this.state.actualRecipe} />
+          <div className="container recipe-pag">
+            <Recipe
+              data={this.state.actualRecipe}
+              handleRenderRecipe={this.handleRenderRecipe}
+            />
           </div>
         )
     }
@@ -169,7 +183,7 @@ export default class App extends Component {
   render() {
     return (
       <>
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <nav id="nav" className="navbar navbar-expand-lg navbar-light bg-light">
           <Logo handleChangePageState={this.handleChangePageState} />
           {/* <SeachBar /> */}
           <Dropdown
