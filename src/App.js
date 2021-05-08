@@ -26,7 +26,7 @@ export default class App extends Component {
     }
   }
   componentDidMount = () => {
-    const cloud = false
+    const cloud = true
     if (localStorage.token_el_cocinillas) {
       const token = { token: localStorage.token_el_cocinillas }
       const heroku = cloud
@@ -56,7 +56,7 @@ export default class App extends Component {
     this.setState({ userData: userData.data })
   }
   loadRecipes = (pagePosition = 0) => {
-    const cloud = false
+    const cloud = true
     const heroku = cloud
       ? "https://elcocinillas-api.herokuapp.com"
       : "http://localhost:3001"
