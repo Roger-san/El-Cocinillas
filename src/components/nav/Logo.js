@@ -3,7 +3,7 @@ import React from "react"
 
 class Logo extends React.Component {
   handleClick = (event) => {
-    this.props.handleChangePageState(event)
+    this.props.changePage(event)
   }
   render() {
     return (

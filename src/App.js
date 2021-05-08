@@ -2,11 +2,13 @@
 // import SeachBar from "./components/nav/SearchBar"
 import Logo from "./components/nav/Logo"
 import RecipeCard from "./components/RecipeCard"
-import MainModal from "./components/mod/MainModal"
+import MainModal from "./components/modal/MainModal"
 import Dropdown from "./components/nav/Dropdown"
 import Footer from "./components/Footer"
 import NewRecipe from "./components/main/new recipe/NewRecipe"
 import Recipe from "./components/main/Recipe"
+import Pagination from "./components/Pagination"
+import Loading from "./components/Loading"
 
 import React, { Component } from "react"
 
@@ -14,15 +16,17 @@ export default class App extends Component {
   constructor() {
     super()
     this.state = {
-      logged: "",
+      logged: false,
       page: "loadingRecipes",
       userData: "",
       actualRecipe: "",
-      renderedRecipes: []
+      renderedRecipes: [],
+      totalRecipes: "",
+      pagePosition: 1
     }
   }
   componentDidMount = () => {
-    const cloud = true
+    const cloud = false
     if (localStorage.token_el_cocinillas) {
       const token = { token: localStorage.token_el_cocinillas }
       const heroku = cloud
@@ -39,27 +43,25 @@ export default class App extends Component {
         .then((data) => {
           if (data) {
             this.setState({ logged: true, userData: data.authorData })
-            this.handleLoadRecipes()
+            this.loadRecipes()
           }
           console.log("data of login by token ", data, "the state is", this.state)
         })
         .catch((data) => console.error(data))
     } else {
-      this.setState({ logged: false })
-      // hace falta un fetch aca que consiga las recipes
-      this.handleLoadRecipes()
+      this.loadRecipes()
     }
   }
-  handleChangeUserData = (userData) => {
+  changeUserData = (userData) => {
     this.setState({ userData: userData.data })
   }
-  handleLoadRecipes = () => {
-    const cloud = true
+  loadRecipes = (pagePosition = 0) => {
+    const cloud = false
     const heroku = cloud
       ? "https://elcocinillas-api.herokuapp.com"
       : "http://localhost:3001"
     const skip = {
-      skip: this.state.renderedRecipes.length > 1 ? this.state.renderedRecipes.length : 0
+      skip: pagePosition * 12
     }
     const opts = {
       method: "POST",
@@ -70,17 +72,20 @@ export default class App extends Component {
     fetch(URL, opts)
       .then((data) => data.json())
       .then((data) => {
-        const recipes = this.state.renderedRecipes
-        data.data.forEach((recipe) => recipes.push(recipe))
-        this.setState({ page: "recipes", renderedRecipes: recipes })
+        this.setState({
+          page: "recipes",
+          renderedRecipes: data.data,
+          totalRecipes: data.data.length
+        })
       })
   }
-  handleLogOut = () => {
+  logOut = () => {
     if (localStorage.token_el_cocinillas) localStorage.removeItem("token_el_cocinillas")
-    if (this.state.page === "newRecipe") this.setState({ logged: false, page: "recipes" })
-    else this.setState({ logged: false })
+    if (this.state.page === "newRecipe")
+      this.setState({ logged: false, page: "recipes", userData: "" })
+    else this.setState({ logged: false, userData: "" })
   }
-  handleLoggedState = (data) => {
+  userLogged = (data) => {
     if (data.token) {
       console.log("register/Login succesfull", data)
       localStorage.token_el_cocinillas = data.token
@@ -95,7 +100,7 @@ export default class App extends Component {
         document.body.className = "no-modal"
     }
   }
-  handleChangePageState = (event) => {
+  changePage = (event) => {
     const { id } = event.target
     switch (id) {
       case "create-recipe":
@@ -110,13 +115,18 @@ export default class App extends Component {
         break
     }
   }
-  handleRenderRecipe = (data) => {
+  renderRecipe = (data) => {
     if (this.state.page === "recipe") {
       this.setState({ actualRecipe: data })
       document.location.href = "#nav"
     }
     this.setState({ page: "recipe", actualRecipe: data })
   }
+  changePaginationPosition = (pagePosition) => {
+    this.setState({ pagePosition: pagePosition })
+    this.loadRecipes(pagePosition - 1)
+  }
+
   renderContainer = () => {
     switch (this.state.page) {
       case "loadingRecipes":
@@ -141,9 +151,9 @@ export default class App extends Component {
         return (
           <div className="container">
             <NewRecipe
-              handleRenderRecipe={this.handleRenderRecipe}
+              renderRecipe={this.renderRecipe}
               userData={this.state.userData}
-              handleChangeUserData={this.handleChangeUserData}
+              changeUserData={this.changeUserData}
             />
           </div>
         )
@@ -152,7 +162,11 @@ export default class App extends Component {
         return (
           <div className="container">
             {this.state.userData.recipes.map((recipe, i) => (
-              <RecipeCard key={`recipe-${i}`} recipe={recipe} />
+              <RecipeCard
+                key={`recipe-${i}`}
+                recipe={recipe}
+                renderRecipe={this.renderRecipe}
+              />
             ))}
           </div>
         )
@@ -163,19 +177,22 @@ export default class App extends Component {
             {this.state.renderedRecipes.map((recipe, i) => (
               <RecipeCard
                 key={`recipe-${i}`}
+                position={i}
                 recipe={recipe}
-                handleRenderRecipe={this.handleRenderRecipe}
+                renderRecipe={this.renderRecipe}
               />
             ))}
+            <Pagination
+              totalRecipes={this.state.totalRecipes}
+              changePaginationPosition={this.changePaginationPosition}
+              pagePosition={this.state.pagePosition}
+            />
           </div>
         )
       case "recipe":
         return (
           <div className="container recipe-pag">
-            <Recipe
-              data={this.state.actualRecipe}
-              handleRenderRecipe={this.handleRenderRecipe}
-            />
+            <Recipe data={this.state.actualRecipe} renderRecipe={this.renderRecipe} />
           </div>
         )
     }
@@ -184,19 +201,19 @@ export default class App extends Component {
     return (
       <>
         <nav id="nav" className="navbar navbar-expand-lg navbar-light bg-light">
-          <Logo handleChangePageState={this.handleChangePageState} />
+          <Logo changePage={this.changePage} />
           {/* <SeachBar /> */}
           <Dropdown
             logged={this.state.logged}
-            handleLogOut={this.handleLogOut}
-            handleChangePageState={this.handleChangePageState}
+            logOut={this.logOut}
+            changePage={this.changePage}
           />
         </nav>
         {this.renderContainer()}
+
         <Footer />
-        {this.state.logged ? undefined : (
-          <MainModal handleLoggedState={this.handleLoggedState} />
-        )}
+        {this.state.logged ? undefined : <MainModal userLogged={this.userLogged} />}
+        {this.state.totalRecipes > 0 ? undefined : <Loading />}
       </>
     )
   }

@@ -1,19 +1,20 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react"
-import hamburger from "../img/hamburger.jpg"
+import hamburger from "../hamburger.jpg"
 class RecipeCard extends React.Component {
   handleClick = () => {
-    this.props.handleRenderRecipe(this.props.recipe)
+    this.props.renderRecipe(this.props.recipe)
   }
   render() {
     return (
-      <div className="card" onClick={this.handleClick}>
-        <img
-          // {this.props.recipe ? this.props.recipe.frontImage : hamburger}
-          src={hamburger}
-          className="card-img-top"
-          alt="recipe img"
-        />
+      <div
+        className={`card`}
+        id={`recipe-${this.props.position + 1}`}
+        onClick={this.handleClick}
+      >
+        <div className="img-wrapper">
+          <img src={hamburger} className="card-img-top" alt="recipe img" />
+        </div>
         <div className="card-body">
           <h5 className="card-title">
             {this.props.recipe ? this.props.recipe.recipeName : "Card title"}

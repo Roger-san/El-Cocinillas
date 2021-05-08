@@ -1,7 +1,7 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from "react"
 import Login from "./Login"
 import Register from "./Register"
-
 export default class MainModal extends Component {
   constructor() {
     super()
@@ -18,12 +18,12 @@ export default class MainModal extends Component {
             {this.state.login ? (
               <Login
                 handleChangeState={this.handleChangeState}
-                handleLoggedState={this.props.handleLoggedState}
+                userLogged={this.props.userLogged}
               />
             ) : (
               <Register
                 handleChangeState={this.handleChangeState}
-                handleLoggedState={this.props.handleLoggedState}
+                userLogged={this.props.userLogged}
               />
             )}
           </div>

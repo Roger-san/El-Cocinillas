@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 /* eslint-disable default-case */
 /* eslint-disable no-fallthrough */
 import React, { Component } from "react"
@@ -16,7 +17,8 @@ export default class NewRecipe extends Component {
         ["", ""]
       ],
       steps: ["", ""],
-      frontImage: ""
+      frontImage: "",
+      imagePreview: ""
     }
   }
   handleValuesChange = (data, type) => {
@@ -32,6 +34,10 @@ export default class NewRecipe extends Component {
         break
       case "steps":
         this.setState({ steps: data })
+        break
+      case "fileImage":
+        console.log("imageFIle data", data)
+        this.setState({ frontImage: data })
         break
     }
   }
@@ -50,10 +56,7 @@ export default class NewRecipe extends Component {
         if (this.state.ingredients.length !== 1) {
           const data = [...this.state.ingredients]
           data.splice(position, 1)
-          console.log("data", data)
-
           this.setState({ ingredients: data })
-          console.log("state", this.state.ingredients)
         }
 
       case "delete-step":
@@ -76,7 +79,8 @@ export default class NewRecipe extends Component {
     }
     const userData = this.props.userData
     userData.recipes.push(newRecipe)
-    const cloud = true
+    // console.log(newRecipe)
+    const cloud = false
     const heroku = cloud
       ? "https://elcocinillas-api.herokuapp.com"
       : "http://localhost:3001"
@@ -89,20 +93,63 @@ export default class NewRecipe extends Component {
     fetch(URL, opts)
       .then((data) => data.json())
       .then((data) => {
-        console.log("recipe registred", data)
+        // console.log("recipe registred", data)
         if (data.success) {
-          this.props.handleChangeUserData(data)
-          this.props.handleRenderRecipe(data.data.recipes[data.data.recipes.length - 1])
+          this.props.changeUserData(data)
+          this.props.renderRecipe(data.data.recipes[data.data.recipes.length - 1])
         }
       })
-      .catch((err) => console.log(err))
+    // .catch((err) => console.log(err))
   }
+  // importFileandPreview = () => {
+  //   window.URL = window.URL || window.webkitURL
+  //   var preview = document.getElementById("Image preview...")
+  //   var file = document.querySelector("input[type=file]").files[0]
+
+  //   preview.src = window.URL.createObjectURL(file)
+  //   preview.onload = () => {
+  //     window.URL.revokeObjectURL(this.src)
+  //   }
+  //   console.log(preview)
+  // }
   handleChange = (event) => {
+    // const file = event.target.files[0]
+    // const readFile = (file) => {
+    //   return new Promise((resolve, reject) => {
+    //     let myReader = new FileReader()
+    //     myReader.onloadend = (e) => {
+    //       resolve(myReader.result)
+    //     }
+    //     myReader.readAsDataURL(file)
+    //   })
+    // }
+    // readFile(file).then((base64string) => {
+    //   var ext = base64string.split(";")[0].match(/jpeg|png|gif/)[0]
+    //   console.log(ext)
+    //   // strip off the data: url prefix to get just the base64-encoded bytes
+    //   var data = base64string.replace(/^data:image\/\w+;base64,/, "")
+    //   var buf = new Buffer.from(data, "base64")
+    //   fs.writeFile(
+    //     "C:\\Users\\Roger\\Downloads\\image." + ext,
+    //     buf,
+    //     fs.readFile("image." + ext, "utf-8", function (err, data) {
+    //       if (data) console.log("done")
+    //     })
+    //   )
+    // console.log(base64string)
+    // })
     this.handleValuesChange(event.target.value, event.target.id)
   }
   render() {
     return (
       <div>
+        {/* <img
+          src={`${this.state.imagePreview}`}
+          height="200"
+          id="Image preview..."
+          alt="Image preview..."
+        ></img> */}
+
         <input
           type="text"
           name="recipeName"
@@ -110,7 +157,6 @@ export default class NewRecipe extends Component {
           onChange={this.handleChange}
           placeholder="Recipe name"
         />
-
         {/* poner un max de letras que se vea */}
         <textarea
           placeholder="Description"
@@ -120,7 +166,6 @@ export default class NewRecipe extends Component {
           cols="50"
           onChange={this.handleChange}
         ></textarea>
-
         <div id="ingredients-container">
           {this.state.ingredients.map((values, i) => (
             <Ingredients
@@ -148,15 +193,37 @@ export default class NewRecipe extends Component {
             Add image
             <input
               type="file"
-              name="fileImage"
-              id="fileImage"
               accept="image/*"
+              id="fileImage"
               capture="camera"
+              onChange={this.handleChange}
             />
-          </label>{" "}
+          </label>
         </div>
         <button onClick={this.handleFetch}>send</button>
       </div>
     )
   }
 }
+
+// const file = event.target.files[0]
+// const readFile = (file) => {
+//   return new Promise((resolve, reject) => {
+//     let myReader = new FileReader()
+//     myReader.onloadend = (e) => {
+//       resolve(myReader.result)
+//     }
+//     myReader.readAsDataURL(file)
+//   })
+// }
+// readFile(file).then((base64string) => {
+//   var ext = base64string.split(";")[0].match(/jpeg|png|gif/)[0]
+//   // strip off the data: url prefix to get just the base64-encoded bytes
+//   var data = base64string.replace(/^data:image\/\w+;base64,/, "")
+//   var buf = new Buffer.from(data, "base64")
+//   writeFile("image." + ext, buf, (err) => {
+//     if (err) console.log(err)
+//     else console.log("object")
+//   })
+//   console.log(base64string)
+// })

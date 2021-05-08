@@ -1,6 +1,6 @@
 import RecipeCard from "../RecipeCard"
 import React, { Component } from "react"
-import hamburger from "../hamburger.jpg"
+import hamburger from "../../hamburger.jpg"
 
 export default class Recipe extends Component {
   constructor() {
@@ -8,7 +8,7 @@ export default class Recipe extends Component {
     this.state = { authorRecipes: "" }
   }
   componentDidMount = () => {
-    const cloud = true
+    const cloud = false
     const heroku = cloud
       ? "https://elcocinillas-api.herokuapp.com"
       : "http://localhost:3001"
@@ -25,7 +25,7 @@ export default class Recipe extends Component {
   handleRenderAuthorRecipes = () => {
     return this.state.authorRecipes.map((recipe, i) => (
       <RecipeCard
-        handleRenderRecipe={this.props.handleRenderRecipe}
+        renderRecipe={this.props.renderRecipe}
         key={`author-recipe-${i}`}
         recipe={recipe}
       />
@@ -34,10 +34,12 @@ export default class Recipe extends Component {
   render() {
     return (
       <>
-        <img className="recipe-image" src={hamburger} alt="hamburger"></img>
-        <div id="name-description-container">
-          <h2>{this.props.data.recipeName}</h2>
-          <h4>{this.props.data.description}</h4>
+        <div id="top-secction">
+          <img className="recipe-image" src={hamburger} alt="hamburger"></img>
+          <div id="name-description-container">
+            <h2>{this.props.data.recipeName}</h2>
+            <h4>{this.props.data.description}</h4>
+          </div>
         </div>
         <div id="ingredients-container">
           <h4>Ingredients</h4>

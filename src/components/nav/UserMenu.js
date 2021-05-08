@@ -4,8 +4,8 @@ import React, { Component } from "react"
 
 export default class UserMenu extends Component {
   handleOnClick = (event) => {
-    if (event.target.id === "logout") this.props.handleLogOut(event)
-    else this.props.handleChangePageState(event)
+    if (event.target.id === "logout") this.props.logOut(event)
+    else this.props.changePage(event)
   }
   render() {
     return (

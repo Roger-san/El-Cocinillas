@@ -1,13 +1,71 @@
+/* menu */
+.dropdown-menu {
+  right: 0px;
+  left: auto !important;
+}
+/* Loading */
+@keyframes loading {
+  10% {
+    opacity: 0%;
+  }
+  15% {
+    opacity: 10%;
+  }
+  50% {
+    opacity: 100%;
+  }
+  85% {
+    opacity: 10%;
+  }
+  90% {
+    opacity: 0%;
+  }
+}
+#loading {
+  position: fixed;
+  top: 50vh;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  animation: loading 2s linear infinite;
+  margin: 0px;
+  padding: 0px;
+  opacity: 0%;
+}
+#loading p {
+  font-size: 2rem;
+  margin: 3px 5px 5px;
+}
+
 /* modal bug */
-.no-modal {
-  overflow: auto !important;
+body {
+  padding: 0px !important;
+}
+/* pagination */
+.navigation {
+  width: 100%;
+  display: flex;
+  margin: 0.5rem 0px 2rem;
+}
+.pagination {
+  margin: auto;
 }
 /* footer */
+footer {
+  position: fixed;
+  width: 100vw;
+  bottom: 0px;
+  text-align: center;
+  background-color: black;
+  color: white;
+}
 footer > p {
   margin: 0.3rem;
   font-weight: 600;
 }
-
+.page-item.active {
+  z-index: 0 !important;
+}
 /* new recipe */
 #recipe-name {
   display: block;
@@ -31,7 +89,7 @@ footer > p {
 
 #ingredients-container,
 #steps-container {
-  margin: 1.5rem 0rem;
+  margin: 1rem 0rem;
 }
 .ingredient-container,
 .step-container {
@@ -108,10 +166,21 @@ footer > p {
   margin-bottom: 2rem;
 }
 .card-body {
-  padding: 1rem !important;
+  padding: 1rem 1rem 2rem 1rem !important;
 }
 .card-title {
   font-size: 2rem;
+}
+.img-wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+.card-img-top {
+  transition: 0.5s;
+}
+
+.card-img-top:hover {
+  transform: scale(1.08);
 }
 .card-description {
   font-size: 1.5rem;
@@ -121,49 +190,37 @@ footer > p {
   text-align: right;
   margin: 0px;
   color: dimgray;
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
 }
 .card-author:hover {
   text-decoration: underline;
 }
 /* modal */
-.modal-header,
-.modal-footer {
-  border: 0px !important;
-}
 label {
+  padding: 1rem;
   width: 100%;
 }
-.modal-content > a,
-.form-group label {
-  padding: 0rem 1rem !important;
+#register {
+  padding: 1rem;
 }
-label > input {
-  margin-top: 0.5rem;
-}
-
-footer {
-  position: fixed;
-  width: 100vw;
-  bottom: 0px;
-  text-align: center;
-  background-color: black;
-  color: white;
-}
-
-nav {
+#error-message {
+  border-radius: 4px;
   width: 100%;
-  display: flex;
-  flex-flow: row;
-  justify-content: space-between !important;
-  padding: 0.5rem 2rem;
-  margin-bottom: 1rem;
+  font-family: Source Sans Pro;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  color: #282a35;
+  padding: 15px;
+  position: relative;
+  box-sizing: border-box;
+  background-color: #ffc0c7;
+  display: none;
 }
-.container {
-  max-width: 80vw !important;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding-bottom: 2rem;
+.display {
+  display: block !important;
 }
 /* individual recipe */
 .recipe-pag {
@@ -172,6 +229,7 @@ nav {
 }
 .recipe-image {
   width: 100%;
+  overflow: hidden;
   height: auto;
 }
 #name-description-container {
@@ -186,7 +244,6 @@ nav {
   border: 1px #afbbc7 solid;
   border-radius: 10px;
   padding: 10px;
-  margin-bottom: 1rem;
 }
 #ingredients-container ul {
   margin: 0px;
@@ -201,6 +258,23 @@ nav {
   display: flex;
   flex-wrap: wrap;
 }
+/* container */
+.container {
+  max-width: 80vw !important;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-bottom: 2rem;
+}
+/* nav */
+nav {
+  width: 100%;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between !important;
+  padding: 0.5rem 2rem;
+  margin-bottom: 1rem;
+}
 @media only screen and (max-width: 600px) {
   footer * {
     margin: 0.2rem !important;
@@ -214,5 +288,26 @@ nav {
     padding-bottom: 4rem;
   }
 }
-@media only screen and (min-width: 601px) {
+@media only screen and (min-width: 900px) {
+  .top-secction {
+    border: 1px #afbbc7 solid;
+    border-radius: 0 8px 8px 0;
+    display: flex;
+  }
+  .recipe-pag {
+    width: 60% !important;
+  }
+  .recipe-image {
+    max-width: 50%;
+    height: 300px;
+  }
+  #top-secction {
+    display: flex;
+    border: 1px #afbbc7 solid;
+    border-radius: 0 8px 8px 0;
+    margin: 1rem 0px;
+  }
+  #name-description-container {
+    margin: 1rem;
+  }
 }
