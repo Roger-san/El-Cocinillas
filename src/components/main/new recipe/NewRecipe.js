@@ -1,24 +1,21 @@
-/* eslint-disable jsx-a11y/img-redundant-alt */
 /* eslint-disable default-case */
-/* eslint-disable no-fallthrough */
 import React, { Component } from "react"
 import Steps from "./Steps"
 import Ingredients from "./Ingredients"
 
 export default class NewRecipe extends Component {
   constructor(props) {
-    super()
+    super(props)
     this.state = {
       author: props.userData.author,
       recipeName: "",
-      description: String,
+      description: "",
       ingredients: [
         ["", ""],
         ["", ""]
       ],
       steps: ["", ""],
-      frontImage: "",
-      imagePreview: ""
+      frontImage: ""
     }
   }
   handleValuesChange = (data, type) => {
@@ -36,12 +33,11 @@ export default class NewRecipe extends Component {
         this.setState({ steps: data })
         break
       case "fileImage":
-        console.log("imageFIle data", data)
-        this.setState({ frontImage: data })
+        const image = data.split("\\")
+        this.setState({ frontImage: image[image.length - 1] })
         break
     }
   }
-
   handleListsQuantityChange = (event, position) => {
     switch (event.target.className) {
       case "add-ingredient":
@@ -58,16 +54,39 @@ export default class NewRecipe extends Component {
           data.splice(position, 1)
           this.setState({ ingredients: data })
         }
-
+        break
       case "delete-step":
         if (this.state.steps.length !== 1) {
           let data = [...this.state.steps]
           data.splice(position, 1)
           this.setState({ steps: data })
         }
+        break
     }
   }
-  handleFetch = () => {
+  handleSubmit = (event) => {
+    event.preventDefault()
+    const cloud = false
+    const heroku = cloud
+      ? "https://elcocinillas-api.herokuapp.com"
+      : "http://localhost:3001"
+
+    if (document.querySelector("input[type=file]").files[0]) {
+      const formData = new FormData()
+      formData.append("image", document.querySelector("input[type=file]").files[0])
+      const URL1 = `${heroku}/api/recipe/new-picture`
+      const opts1 = {
+        method: "POST",
+        body: formData
+      }
+      fetch(URL1, opts1)
+        .then((data) => data.json())
+        .then((data) => {
+          console.log(data)
+        })
+        .catch((err) => console.log(err))
+    }
+
     const { author, recipeName, description, ingredients, steps, frontImage } = this.state
     const newRecipe = {
       author: author,
@@ -79,93 +98,69 @@ export default class NewRecipe extends Component {
     }
     const userData = this.props.userData
     userData.recipes.push(newRecipe)
-    // console.log(newRecipe)
-    const cloud = true
-    const heroku = cloud
-      ? "https://elcocinillas-api.herokuapp.com"
-      : "http://localhost:3001"
-    const URL = `${heroku}/api/users/new-recipe`
-    const opts = {
+    const URL2 = `${heroku}/api/recipe/new-recipe`
+    const opts2 = {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ newRecipe: newRecipe, userData: userData })
     }
-    fetch(URL, opts)
+    fetch(URL2, opts2)
       .then((data) => data.json())
       .then((data) => {
-        // console.log("recipe registred", data)
         if (data.success) {
           this.props.changeUserData(data)
-          this.props.renderRecipe(data.data.recipes[data.data.recipes.length - 1])
+          document.location.href = "/"
         }
       })
-    // .catch((err) => console.log(err))
+      .catch((err) => console.log(err))
   }
-  // importFileandPreview = () => {
-  //   window.URL = window.URL || window.webkitURL
-  //   var preview = document.getElementById("Image preview...")
-  //   var file = document.querySelector("input[type=file]").files[0]
-
-  //   preview.src = window.URL.createObjectURL(file)
-  //   preview.onload = () => {
-  //     window.URL.revokeObjectURL(this.src)
-  //   }
-  //   console.log(preview)
-  // }
   handleChange = (event) => {
-    // const file = event.target.files[0]
-    // const readFile = (file) => {
-    //   return new Promise((resolve, reject) => {
-    //     let myReader = new FileReader()
-    //     myReader.onloadend = (e) => {
-    //       resolve(myReader.result)
-    //     }
-    //     myReader.readAsDataURL(file)
-    //   })
-    // }
-    // readFile(file).then((base64string) => {
-    //   var ext = base64string.split(";")[0].match(/jpeg|png|gif/)[0]
-    //   console.log(ext)
-    //   // strip off the data: url prefix to get just the base64-encoded bytes
-    //   var data = base64string.replace(/^data:image\/\w+;base64,/, "")
-    //   var buf = new Buffer.from(data, "base64")
-    //   fs.writeFile(
-    //     "C:\\Users\\Roger\\Downloads\\image." + ext,
-    //     buf,
-    //     fs.readFile("image." + ext, "utf-8", function (err, data) {
-    //       if (data) console.log("done")
-    //     })
-    //   )
-    // console.log(base64string)
-    // })
+    if (
+      event.target.id === "fileImage" &&
+      document.querySelector("input[type=file]").files[0]
+    ) {
+      window.URL = window.URL || window.webkitURL
+      const preview = document.getElementById("preview")
+      const file = document.querySelector("input[type=file]").files[0]
+      preview.classList.toggle("width")
+      preview.src = window.URL.createObjectURL(file)
+      preview.onload = () => {
+        window.URL.revokeObjectURL(this.src)
+      }
+      // return this.handleValuesChange(file.name.split("\\"), event.target.id)
+    }
     this.handleValuesChange(event.target.value, event.target.id)
   }
   render() {
     return (
-      <div>
-        {/* <img
-          src={`${this.state.imagePreview}`}
-          height="200"
-          id="Image preview..."
-          alt="Image preview..."
-        ></img> */}
-
-        <input
-          type="text"
-          name="recipeName"
-          id="recipe-name"
-          onChange={this.handleChange}
-          placeholder="Recipe name"
-        />
-        {/* poner un max de letras que se vea */}
-        <textarea
-          placeholder="Description"
-          id="description"
-          name="description"
-          rows="4"
-          cols="50"
-          onChange={this.handleChange}
-        ></textarea>
+      <form id="new-recipe-form" onSubmit={this.handleSubmit}>
+        <div id="top-form">
+          <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            id="preview"
+            alt="preview"
+          ></img>
+          <div id="top-div">
+            <input
+              type="text"
+              name="recipeName"
+              id="recipe-name"
+              onChange={this.handleChange}
+              placeholder="Recipe name"
+              minLength="3"
+              maxLength="40"
+              required
+            />
+            <textarea
+              placeholder="Description"
+              id="description"
+              name="description"
+              rows="5"
+              onChange={this.handleChange}
+              maxLength="150"
+            ></textarea>
+          </div>
+        </div>
         <div id="ingredients-container">
           {this.state.ingredients.map((values, i) => (
             <Ingredients
@@ -188,7 +183,7 @@ export default class NewRecipe extends Component {
             />
           ))}
         </div>
-        <div id="file-image-container">
+        <div id="form-bottom">
           <label id="file-button">
             Add image
             <input
@@ -199,31 +194,11 @@ export default class NewRecipe extends Component {
               onChange={this.handleChange}
             />
           </label>
+          <button id="form-button" type="submit">
+            Send
+          </button>
         </div>
-        <button onClick={this.handleFetch}>send</button>
-      </div>
+      </form>
     )
   }
 }
-
-// const file = event.target.files[0]
-// const readFile = (file) => {
-//   return new Promise((resolve, reject) => {
-//     let myReader = new FileReader()
-//     myReader.onloadend = (e) => {
-//       resolve(myReader.result)
-//     }
-//     myReader.readAsDataURL(file)
-//   })
-// }
-// readFile(file).then((base64string) => {
-//   var ext = base64string.split(";")[0].match(/jpeg|png|gif/)[0]
-//   // strip off the data: url prefix to get just the base64-encoded bytes
-//   var data = base64string.replace(/^data:image\/\w+;base64,/, "")
-//   var buf = new Buffer.from(data, "base64")
-//   writeFile("image." + ext, buf, (err) => {
-//     if (err) console.log(err)
-//     else console.log("object")
-//   })
-//   console.log(base64string)
-// })

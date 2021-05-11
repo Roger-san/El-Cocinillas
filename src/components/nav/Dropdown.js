@@ -6,7 +6,11 @@ class Dropdown extends React.Component {
     return (
       <div>
         {this.props.logged ? (
-          <UserMenu logOut={this.props.logOut} changePage={this.props.changePage} />
+          <UserMenu
+            logOut={this.props.logOut}
+            changePage={this.props.changePage}
+            userData={this.props.userData}
+          />
         ) : (
           <a data-toggle="modal" data-target="#staticBackdrop" href="#staticBackdrop">
             Login

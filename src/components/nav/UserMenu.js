@@ -22,19 +22,13 @@ export default class UserMenu extends Component {
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                User
+                {this.props.userData.author.split(" ")[0]}
               </a>
               <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                {/* <a
-                className="dropdown-item"
-                href="#"
-                id="config"
-                onClick={this.handleOnClick}
-              >
-                Config
-              </a> */}
                 <a
-                  className="dropdown-item"
+                  className={`dropdown-item ${
+                    this.props.userData.recipes.length ? null : "disabled"
+                  }`}
                   href="#"
                   id="authorRecipes"
                   onClick={this.handleOnClick}

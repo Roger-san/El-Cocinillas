@@ -26,7 +26,7 @@ export default class App extends Component {
     }
   }
   componentDidMount = () => {
-    const cloud = true
+    const cloud = false
     if (localStorage.token_el_cocinillas) {
       const token = { token: localStorage.token_el_cocinillas }
       const heroku = cloud
@@ -56,7 +56,7 @@ export default class App extends Component {
     this.setState({ userData: userData.data })
   }
   loadRecipes = (pagePosition = 0) => {
-    const cloud = true
+    const cloud = false
     const heroku = cloud
       ? "https://elcocinillas-api.herokuapp.com"
       : "http://localhost:3001"
@@ -75,13 +75,13 @@ export default class App extends Component {
         this.setState({
           page: "recipes",
           renderedRecipes: data.data,
-          totalRecipes: data.data.length
+          totalRecipes: data.pagesLength
         })
       })
   }
   logOut = () => {
     if (localStorage.token_el_cocinillas) localStorage.removeItem("token_el_cocinillas")
-    if (this.state.page === "newRecipe")
+    if (this.state.page === "newRecipe" || this.state.page === "authorRecipes")
       this.setState({ logged: false, page: "recipes", userData: "" })
     else this.setState({ logged: false, userData: "" })
   }
@@ -111,7 +111,6 @@ export default class App extends Component {
         break
       case "authorRecipes":
         this.setState({ page: "authorRecipes" })
-        console.log(this.state)
         break
     }
   }
@@ -125,8 +124,9 @@ export default class App extends Component {
   changePaginationPosition = (pagePosition) => {
     this.setState({ pagePosition: pagePosition })
     this.loadRecipes(pagePosition - 1)
+    this.setState({ page: "loadingRecipes" })
+    this.setState({ page: "recipes" })
   }
-
   renderContainer = () => {
     switch (this.state.page) {
       case "loadingRecipes":
@@ -146,23 +146,21 @@ export default class App extends Component {
             <RecipeCard />
           </div>
         )
-
       case "newRecipe":
         return (
           <div className="container">
             <NewRecipe
-              renderRecipe={this.renderRecipe}
               userData={this.state.userData}
               changeUserData={this.changeUserData}
             />
           </div>
         )
-
       case "authorRecipes":
         return (
           <div className="container">
             {this.state.userData.recipes.map((recipe, i) => (
               <RecipeCard
+                getRecipeImage={this.getRecipeImage}
                 key={`recipe-${i}`}
                 recipe={recipe}
                 renderRecipe={this.renderRecipe}
@@ -170,12 +168,12 @@ export default class App extends Component {
             ))}
           </div>
         )
-
       case "recipes":
         return (
           <div className="container">
             {this.state.renderedRecipes.map((recipe, i) => (
               <RecipeCard
+                getRecipeImage={this.getRecipeImage}
                 key={`recipe-${i}`}
                 position={i}
                 recipe={recipe}
@@ -192,18 +190,36 @@ export default class App extends Component {
       case "recipe":
         return (
           <div className="container recipe-pag">
-            <Recipe data={this.state.actualRecipe} renderRecipe={this.renderRecipe} />
+            <Recipe
+              getRecipeImage={this.getRecipeImage}
+              data={this.state.actualRecipe}
+              renderRecipe={this.renderRecipe}
+            />
           </div>
         )
     }
   }
+  getRecipeImage = (id, name) => {
+    const URL = `http://localhost:3001/api/recipe/image/${name}`
+    fetch(URL)
+      .then((data) => data.json())
+      .then((data) => {
+        if (data.success) {
+          const image = Buffer.from(data.data).toString("base64")
+          const img = document.getElementById(id)
+          img.src = `data:${data.data.mimetype};base64,${image}`
+        }
+        if (!data.success) console.log(data.message)
+      })
+  }
   render() {
     return (
       <>
-        <nav id="nav" className="navbar navbar-expand-lg navbar-light bg-light">
+        <nav id="nav" className="navbar navbar-expand-lg navbar-light ">
           <Logo changePage={this.changePage} />
           {/* <SeachBar /> */}
           <Dropdown
+            userData={this.state.userData}
             logged={this.state.logged}
             logOut={this.logOut}
             changePage={this.changePage}

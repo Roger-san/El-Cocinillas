@@ -8,7 +8,6 @@ export default class Ingredients extends Component {
     const allIngredients = [...document.getElementsByClassName("ingredient-name")].map(
       (x) => x.value
     )
-
     const allQuantity = [...document.getElementsByClassName("quantity")].map(
       (x) => x.value
     )
@@ -24,15 +23,18 @@ export default class Ingredients extends Component {
         <div className="ingredient">
           <input
             type="text"
-            name="ingredient"
+            name={`ingredient-${this.props.position + 1}`}
             value={this.props.values.ingredient}
             className="ingredient-name"
             onChange={this.handleChange}
             placeholder="Ingredient"
+            minLength="3"
+            maxLength="30"
+            required
           />
           <input
             type="text"
-            name="quantity"
+            name={`quantity-${this.props.position + 1}`}
             value={this.props.values.quantity}
             className="quantity"
             onChange={this.handleChange}

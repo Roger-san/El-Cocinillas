@@ -5,6 +5,16 @@ class RecipeCard extends React.Component {
   handleClick = () => {
     this.props.renderRecipe(this.props.recipe)
   }
+  componentDidMount = () => {
+    if (this.props.recipe) {
+      let image = this.props.recipe.frontImage.split("\\")
+      image = image[image.length - 1]
+      if (image) {
+        console.log(image)
+        this.props.getRecipeImage(`recipe-img-${this.props.position}`, image)
+      }
+    }
+  }
   render() {
     return (
       <div
@@ -13,7 +23,12 @@ class RecipeCard extends React.Component {
         onClick={this.handleClick}
       >
         <div className="img-wrapper">
-          <img src={hamburger} className="card-img-top" alt="recipe img" />
+          <img
+            id={`recipe-img-${this.props.position}`}
+            src={hamburger}
+            className="card-img-top"
+            alt="recipe img"
+          />
         </div>
         <div className="card-body">
           <h5 className="card-title">

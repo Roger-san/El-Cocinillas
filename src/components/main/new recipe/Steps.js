@@ -16,10 +16,13 @@ export default class Steps extends Component {
         <label className="step-label">{`Step ${this.props.position + 1}:  `}</label>
         <input
           type="text"
-          name="step"
+          name={`step-${this.props.position + 1}`}
           className="step"
           onChange={this.handleChange}
           value={this.props.value}
+          minLength="5"
+          maxLength="300"
+          required
         />
         <button onClick={this.handleClick} className="add-step">
           +

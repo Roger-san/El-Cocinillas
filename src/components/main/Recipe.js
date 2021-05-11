@@ -8,7 +8,7 @@ export default class Recipe extends Component {
     this.state = { authorRecipes: "" }
   }
   componentDidMount = () => {
-    const cloud = true
+    const cloud = false
     const heroku = cloud
       ? "https://elcocinillas-api.herokuapp.com"
       : "http://localhost:3001"
@@ -20,11 +20,16 @@ export default class Recipe extends Component {
     }
     fetch(URL, opts)
       .then((data) => data.json())
-      .then((data) => this.setState({ authorRecipes: data.data }))
+      .then((data) => {
+        this.setState({ authorRecipes: data.data })
+        // console.log(data.data[0].frontImage)
+        this.props.getRecipeImage("recipe-image", data.data[0].frontImage)
+      })
   }
-  handleRenderAuthorRecipes = () => {
+  renderAuthorRecipes = () => {
     return this.state.authorRecipes.map((recipe, i) => (
       <RecipeCard
+        getRecipeImage={this.props.getRecipeImage}
         renderRecipe={this.props.renderRecipe}
         key={`author-recipe-${i}`}
         recipe={recipe}
@@ -35,7 +40,12 @@ export default class Recipe extends Component {
     return (
       <>
         <div id="top-secction">
-          <img className="recipe-image" src={hamburger} alt="hamburger"></img>
+          <img
+            id="recipe-image"
+            className="recipe-image"
+            src={hamburger}
+            alt="hamburger"
+          ></img>
           <div id="name-description-container">
             <h2>{this.props.data.recipeName}</h2>
             <h4>{this.props.data.description}</h4>
@@ -46,15 +56,19 @@ export default class Recipe extends Component {
           <ul>
             {this.props.data.ingredients.map((ingredient, i) => (
               <li key={`ingredient-${i}`}>
-                <span key={`ingredient-qty-${i}`}>{ingredient.quantity} </span>
-                <span key={`ingredient-name-${i}`}>{ingredient.ingredient}</span>
+                <span className="ingredients-span" key={`ingredient-qty-${i}`}>
+                  {ingredient.quantity}{" "}
+                </span>
+                <span className="ingredients-span" key={`ingredient-name-${i}`}>
+                  {ingredient.ingredient}
+                </span>
               </li>
             ))}
           </ul>
         </div>
         <div id="steps-container">
           {this.props.data.steps.map((step, i) => (
-            <div key={`step-${i}`}>
+            <div className="step-div" key={`step-${i}`}>
               <span className="step-span">Step {i + 1}: </span>
               <span>{step}</span>
             </div>
@@ -64,7 +78,7 @@ export default class Recipe extends Component {
           <>
             <div className="author-recipes-container">
               <h3>More author recipes:</h3>
-              <div className="author-recipes">{this.handleRenderAuthorRecipes()}</div>
+              <div className="author-recipes">{this.renderAuthorRecipes()}</div>
             </div>
           </>
         ) : undefined}

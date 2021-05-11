@@ -26,7 +26,7 @@ export default class Register extends Component {
     const { author, email, password } = this.state
     const newUser = { author: author, email: email, password: password }
     const divErrorMesssage = document.getElementById("error-message")
-    const cloud = true
+    const cloud = false
     const heroku = cloud
       ? "https://elcocinillas-api.herokuapp.com"
       : "http://localhost:3001"
@@ -108,7 +108,7 @@ export default class Register extends Component {
             </svg>
             {this.state.message}
           </div>
-          <div className="modal-footer">
+          <div className="modal-footer register-modal-footer">
             <button type="submit" className="btn btn-primary">
               Send
             </button>
