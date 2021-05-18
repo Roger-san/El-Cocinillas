@@ -16,7 +16,7 @@ export default class Login extends Component {
     const user = { email: email, password: password }
     const divErrorMesssage = document.getElementById("error-message")
 
-    const cloud = false
+    const cloud = true
     const heroku = cloud
       ? "https://elcocinillas-api.herokuapp.com"
       : "http://localhost:3001"
@@ -34,7 +34,6 @@ export default class Login extends Component {
           this.setState({ message: data.message })
           document.getElementById("error-message").classList.toggle("display")
         }
-        console.log(data)
       })
       .catch((err) => console.log(err))
   }

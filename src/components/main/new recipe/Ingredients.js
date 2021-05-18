@@ -15,7 +15,7 @@ export default class Ingredients extends Component {
       ingredient: ingredient,
       quantity: allQuantity[i]
     }))
-    this.props.handleValuesChange(allIngredientsCuantity, "ingredients")
+    this.props.handleValuesChange("ingredients", allIngredientsCuantity)
   }
   render() {
     return (

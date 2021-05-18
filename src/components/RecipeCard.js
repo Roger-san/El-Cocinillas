@@ -2,30 +2,56 @@
 import React from "react"
 import hamburger from "../hamburger.jpg"
 class RecipeCard extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {}
+  }
   handleClick = () => {
-    this.props.renderRecipe(this.props.recipe)
+    if (this.props.recipe) {
+      this.props.renderRecipe(this.props.recipe)
+    }
   }
   componentDidMount = () => {
-    if (this.props.recipe) {
-      let image = this.props.recipe.frontImage.split("\\")
-      image = image[image.length - 1]
-      if (image) {
-        console.log(image)
-        this.props.getRecipeImage(`recipe-img-${this.props.position}`, image)
-      }
+    const img = document.getElementById(`recipe-img-${this.giveIdNumber()}`)
+    img.src = hamburger
+  }
+  giveIdNumber = () => {
+    if (this.props.recipe && this.props.page) {
+      // console.log(this.props.position + 12 * (this.props.page - 1))
+      return this.props.position + 12 * (this.props.page - 1)
+    }
+  }
+  getImageData = () => {
+    if (this.props.recipe.frontImage) {
+      const cloud = true
+      const heroku = cloud
+        ? "https://elcocinillas-api.herokuapp.com"
+        : "http://localhost:3001"
+      const URL = `${heroku}/api/recipe/image/${this.props.recipe.frontImage}`
+      fetch(URL)
+        .then((data) => data.json())
+        .then((data) => {
+          console.log(data.data[0])
+          if (data.success) {
+            const img = document.getElementById(`recipe-img-${this.giveIdNumber()}`)
+            if (img && data.data[0]) {
+              img.src = data.data[0].data
+            }
+          }
+        })
     }
   }
   render() {
     return (
       <div
-        className={`card`}
-        id={`recipe-${this.props.position + 1}`}
+        className="card"
+        id={`recipe-${this.giveIdNumber()}`}
         onClick={this.handleClick}
       >
         <div className="img-wrapper">
           <img
-            id={`recipe-img-${this.props.position}`}
-            src={hamburger}
+            id={`recipe-img-${this.giveIdNumber()}`}
+            src={this.getImageData()}
             className="card-img-top"
             alt="recipe img"
           />

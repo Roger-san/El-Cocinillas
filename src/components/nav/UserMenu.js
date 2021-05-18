@@ -5,7 +5,7 @@ import React, { Component } from "react"
 export default class UserMenu extends Component {
   handleOnClick = (event) => {
     if (event.target.id === "logout") this.props.logOut(event)
-    else this.props.changePage(event)
+    else this.props.changePage(event.target.id)
   }
   render() {
     return (
@@ -37,7 +37,7 @@ export default class UserMenu extends Component {
                 </a>
                 <a
                   className="dropdown-item"
-                  id="create-recipe"
+                  id="newRecipe"
                   href="#"
                   onClick={this.handleOnClick}
                 >

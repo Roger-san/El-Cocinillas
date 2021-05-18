@@ -18,7 +18,7 @@ export default class NewRecipe extends Component {
       frontImage: ""
     }
   }
-  handleValuesChange = (data, type) => {
+  handleValuesChange = (type, data) => {
     switch (type) {
       case "recipe-name":
         this.setState({ recipeName: data })
@@ -33,8 +33,7 @@ export default class NewRecipe extends Component {
         this.setState({ steps: data })
         break
       case "fileImage":
-        const image = data.split("\\")
-        this.setState({ frontImage: image[image.length - 1] })
+        this.setState({ frontImage: data })
         break
     }
   }
@@ -66,43 +65,37 @@ export default class NewRecipe extends Component {
   }
   handleSubmit = (event) => {
     event.preventDefault()
-    const cloud = false
+    const cloud = true
     const heroku = cloud
       ? "https://elcocinillas-api.herokuapp.com"
       : "http://localhost:3001"
 
     if (document.querySelector("input[type=file]").files[0]) {
-      const formData = new FormData()
-      formData.append("image", document.querySelector("input[type=file]").files[0])
-      const URL1 = `${heroku}/api/recipe/new-picture`
-      const opts1 = {
-        method: "POST",
-        body: formData
+      const URLIMAGE = `${heroku}/api/recipe/new-picture`
+      const file = document.querySelector("input[type=file]").files[0]
+      var reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => {
+        const opts1 = {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ data: reader.result, name: this.state.frontImage })
+        }
+        fetch(URLIMAGE, opts1)
+          .then((data) => data.json())
+          .then((data) => {
+            console.log(data)
+          })
+          .catch((err) => console.log(err))
       }
-      fetch(URL1, opts1)
-        .then((data) => data.json())
-        .then((data) => {
-          console.log(data)
-        })
-        .catch((err) => console.log(err))
-    }
-
-    const { author, recipeName, description, ingredients, steps, frontImage } = this.state
-    const newRecipe = {
-      author: author,
-      recipeName: recipeName,
-      description: description,
-      ingredients: ingredients,
-      steps: steps,
-      frontImage: frontImage
     }
     const userData = this.props.userData
-    userData.recipes.push(newRecipe)
+    userData.recipes.push(this.state)
     const URL2 = `${heroku}/api/recipe/new-recipe`
     const opts2 = {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ newRecipe: newRecipe, userData: userData })
+      body: JSON.stringify({ newRecipe: this.state, userData: userData })
     }
     fetch(URL2, opts2)
       .then((data) => data.json())
@@ -119,17 +112,21 @@ export default class NewRecipe extends Component {
       event.target.id === "fileImage" &&
       document.querySelector("input[type=file]").files[0]
     ) {
-      window.URL = window.URL || window.webkitURL
+      // window.URL = window.URL || window.webkitURL
       const preview = document.getElementById("preview")
       const file = document.querySelector("input[type=file]").files[0]
-      preview.classList.toggle("width")
-      preview.src = window.URL.createObjectURL(file)
-      preview.onload = () => {
-        window.URL.revokeObjectURL(this.src)
+      var reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => {
+        preview.src = reader.result
+        this.setState({ frontImage: file.name })
+        if (!preview.classList.contains("width")) {
+          preview.classList.toggle("width")
+        }
       }
-      // return this.handleValuesChange(file.name.split("\\"), event.target.id)
+      return this.handleValuesChange("frontImage", file.name)
     }
-    this.handleValuesChange(event.target.value, event.target.id)
+    this.handleValuesChange(event.target.id, event.target.value)
   }
   render() {
     return (

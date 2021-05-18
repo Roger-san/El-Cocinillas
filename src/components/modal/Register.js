@@ -26,7 +26,7 @@ export default class Register extends Component {
     const { author, email, password } = this.state
     const newUser = { author: author, email: email, password: password }
     const divErrorMesssage = document.getElementById("error-message")
-    const cloud = false
+    const cloud = true
     const heroku = cloud
       ? "https://elcocinillas-api.herokuapp.com"
       : "http://localhost:3001"

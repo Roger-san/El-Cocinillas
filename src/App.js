@@ -2,6 +2,7 @@
 // import SeachBar from "./components/nav/SearchBar"
 import Logo from "./components/nav/Logo"
 import RecipeCard from "./components/RecipeCard"
+import VoidCard from "./components/VoidCard"
 import MainModal from "./components/modal/MainModal"
 import Dropdown from "./components/nav/Dropdown"
 import Footer from "./components/Footer"
@@ -26,7 +27,7 @@ export default class App extends Component {
     }
   }
   componentDidMount = () => {
-    const cloud = false
+    const cloud = true
     if (localStorage.token_el_cocinillas) {
       const token = { token: localStorage.token_el_cocinillas }
       const heroku = cloud
@@ -56,7 +57,9 @@ export default class App extends Component {
     this.setState({ userData: userData.data })
   }
   loadRecipes = (pagePosition = 0) => {
-    const cloud = false
+    this.setState({ page: "", renderedRecipes: "" })
+
+    const cloud = true
     const heroku = cloud
       ? "https://elcocinillas-api.herokuapp.com"
       : "http://localhost:3001"
@@ -87,7 +90,6 @@ export default class App extends Component {
   }
   userLogged = (data) => {
     if (data.token) {
-      console.log("register/Login succesfull", data)
       localStorage.token_el_cocinillas = data.token
       this.setState({ logged: true, userData: data.authorData })
       if (document.getElementsByClassName("modal-backdrop").length !== 0) {
@@ -100,50 +102,34 @@ export default class App extends Component {
         document.body.className = "no-modal"
     }
   }
-  changePage = (event) => {
-    const { id } = event.target
-    switch (id) {
-      case "create-recipe":
-        this.setState({ page: "newRecipe" })
-        break
-      case "logo":
-        this.setState({ page: "recipes" })
-        break
-      case "authorRecipes":
-        this.setState({ page: "authorRecipes" })
-        break
-    }
+  changePage = (pageName) => {
+    this.setState({ page: pageName })
   }
   renderRecipe = (data) => {
-    if (this.state.page === "recipe") {
-      this.setState({ actualRecipe: data })
-      document.location.href = "#nav"
-    }
     this.setState({ page: "recipe", actualRecipe: data })
+    document.location.href = "#nav"
   }
   changePaginationPosition = (pagePosition) => {
     this.setState({ pagePosition: pagePosition })
     this.loadRecipes(pagePosition - 1)
-    this.setState({ page: "loadingRecipes" })
-    this.setState({ page: "recipes" })
   }
   renderContainer = () => {
     switch (this.state.page) {
       case "loadingRecipes":
         return (
           <div className="container">
-            <RecipeCard />
-            <RecipeCard />
-            <RecipeCard />
-            <RecipeCard />
-            <RecipeCard />
-            <RecipeCard />
-            <RecipeCard />
-            <RecipeCard />
-            <RecipeCard />
-            <RecipeCard />
-            <RecipeCard />
-            <RecipeCard />
+            <VoidCard />
+            <VoidCard />
+            <VoidCard />
+            <VoidCard />
+            <VoidCard />
+            <VoidCard />
+            <VoidCard />
+            <VoidCard />
+            <VoidCard />
+            <VoidCard />
+            <VoidCard />
+            <VoidCard />
           </div>
         )
       case "newRecipe":
@@ -160,10 +146,12 @@ export default class App extends Component {
           <div className="container">
             {this.state.userData.recipes.map((recipe, i) => (
               <RecipeCard
-                getRecipeImage={this.getRecipeImage}
                 key={`recipe-${i}`}
+                position={i + 1}
                 recipe={recipe}
+                getRecipeImage={this.getRecipeImage}
                 renderRecipe={this.renderRecipe}
+                page={this.state.pagePosition}
               />
             ))}
           </div>
@@ -173,11 +161,12 @@ export default class App extends Component {
           <div className="container">
             {this.state.renderedRecipes.map((recipe, i) => (
               <RecipeCard
-                getRecipeImage={this.getRecipeImage}
                 key={`recipe-${i}`}
-                position={i}
+                position={i + 1}
                 recipe={recipe}
+                getRecipeImage={this.getRecipeImage}
                 renderRecipe={this.renderRecipe}
+                page={this.state.pagePosition}
               />
             ))}
             <Pagination
@@ -194,29 +183,21 @@ export default class App extends Component {
               getRecipeImage={this.getRecipeImage}
               data={this.state.actualRecipe}
               renderRecipe={this.renderRecipe}
+              page={this.state.pagePosition}
             />
           </div>
         )
     }
   }
-  getRecipeImage = (id, name) => {
-    const URL = `http://localhost:3001/api/recipe/image/${name}`
-    fetch(URL)
-      .then((data) => data.json())
-      .then((data) => {
-        if (data.success) {
-          const image = Buffer.from(data.data).toString("base64")
-          const img = document.getElementById(id)
-          img.src = `data:${data.data.mimetype};base64,${image}`
-        }
-        if (!data.success) console.log(data.message)
-      })
-  }
   render() {
     return (
       <>
         <nav id="nav" className="navbar navbar-expand-lg navbar-light ">
-          <Logo changePage={this.changePage} />
+          <Logo
+            changePage={this.changePage}
+            changePaginationPosition={this.changePaginationPosition}
+          />
+
           {/* <SeachBar /> */}
           <Dropdown
             userData={this.state.userData}

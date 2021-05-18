@@ -2,8 +2,9 @@
 import React from "react"
 
 class Logo extends React.Component {
-  handleClick = (event) => {
-    this.props.changePage(event)
+  handleClick = () => {
+    this.props.changePage("recipes")
+    this.props.changePaginationPosition(1)
   }
   render() {
     return (

@@ -272,7 +272,9 @@ label {
 }
 .recipe-image {
   width: 100%;
+  max-width: 50% !important;
   overflow: hidden;
+  min-height: 200px;
   height: auto;
 }
 #name-description-container {
@@ -370,7 +372,7 @@ nav {
     display: flex;
     border: 1px #afbbc7 solid;
     border-radius: 8px 8px 8px 8px;
-    margin: 1rem 0px;
+    margin: 1rem;
   }
   #name-description-container {
     margin: 1rem;
@@ -385,5 +387,8 @@ nav {
   #new-recipe-form {
     max-width: 50%;
     width: 50%;
+  }
+  #top-form {
+    margin: 1rem;
   }
 }

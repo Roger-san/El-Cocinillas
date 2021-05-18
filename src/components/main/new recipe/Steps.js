@@ -8,7 +8,7 @@ export default class Steps extends Component {
     const allSteps = Array.from(document.getElementsByClassName("step")).map(
       (x) => x.value
     )
-    this.props.handleValuesChange(allSteps, "steps")
+    this.props.handleValuesChange("steps", allSteps)
   }
   render() {
     return (

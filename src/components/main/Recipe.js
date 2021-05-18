@@ -8,7 +8,7 @@ export default class Recipe extends Component {
     this.state = { authorRecipes: "" }
   }
   componentDidMount = () => {
-    const cloud = false
+    const cloud = true
     const heroku = cloud
       ? "https://elcocinillas-api.herokuapp.com"
       : "http://localhost:3001"
@@ -22,17 +22,46 @@ export default class Recipe extends Component {
       .then((data) => data.json())
       .then((data) => {
         this.setState({ authorRecipes: data.data })
-        // console.log(data.data[0].frontImage)
-        this.props.getRecipeImage("recipe-image", data.data[0].frontImage)
       })
   }
+
+  giveIdName = () => {
+    if (this.props.data.frontImage) {
+      let imageName = this.props.data.frontImage.split("\\")
+      imageName = imageName[imageName.length - 1]
+      return imageName
+    }
+  }
+  getImageData = () => {
+    const imageName = this.props.data.frontImage
+    if (this.props.data.frontImage) {
+      const cloud = true
+      const heroku = cloud
+        ? "https://elcocinillas-api.herokuapp.com"
+        : "http://localhost:3001"
+      const URL = `${heroku}/api/recipe/image/${imageName}`
+      console.log(imageName)
+      fetch(URL)
+        .then((data) => data.json())
+        .then((data) => {
+          if (data.success && data.data[0]) {
+            const img = document.getElementById(imageName)
+            if (img) {
+              img.src = data.data[0].data
+            }
+          }
+        })
+    }
+  }
+
   renderAuthorRecipes = () => {
     return this.state.authorRecipes.map((recipe, i) => (
       <RecipeCard
-        getRecipeImage={this.props.getRecipeImage}
-        renderRecipe={this.props.renderRecipe}
         key={`author-recipe-${i}`}
+        position={i + 1}
         recipe={recipe}
+        renderRecipe={this.props.renderRecipe}
+        page={this.props.page}
       />
     ))
   }
@@ -41,9 +70,9 @@ export default class Recipe extends Component {
       <>
         <div id="top-secction">
           <img
-            id="recipe-image"
+            id={this.giveIdName()}
             className="recipe-image"
-            src={hamburger}
+            src={this.getImageData() || hamburger}
             alt="hamburger"
           ></img>
           <div id="name-description-container">
