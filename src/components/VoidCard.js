@@ -1,12 +1,12 @@
 import React, { Component } from "react"
-import hamburger from "../hamburger.jpg"
+import emptyImage from "../empty-image.jpg"
 
 export default class VoidCard extends Component {
   render() {
     return (
       <div className="card">
         <div className="img-wrapper">
-          <img src={hamburger} className="card-img-top" alt="recipe img" />
+          <img src={emptyImage} className="card-img-top" alt="recipe img" />
         </div>
         <div className="card-body">
           <h5 className="card-title">"Card title"</h5>

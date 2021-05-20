@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react"
-import hamburger from "../hamburger.jpg"
+import emptyImage from "../empty-image.jpg"
 class RecipeCard extends React.Component {
   constructor(props) {
     super(props)
@@ -13,11 +13,10 @@ class RecipeCard extends React.Component {
   }
   componentDidMount = () => {
     const img = document.getElementById(`recipe-img-${this.giveIdNumber()}`)
-    img.src = hamburger
+    img.src = emptyImage
   }
   giveIdNumber = () => {
     if (this.props.recipe && this.props.page) {
-      // console.log(this.props.position + 12 * (this.props.page - 1))
       return this.props.position + 12 * (this.props.page - 1)
     }
   }

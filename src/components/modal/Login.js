@@ -23,7 +23,6 @@ export default class Login extends Component {
       headers: { "content-type": "application/json" },
       body: JSON.stringify(user)
     }
-    console.log("data")
     fetch(URL, opts)
       .then((data) => data.json())
       .then((data) => {
@@ -36,7 +35,6 @@ export default class Login extends Component {
       .catch((err) => console.log(err))
   }
   handleOnChange = (event) => {
-    console.log(this.state)
     const { id, value } = event.target
     if (id === "email") this.setState({ email: value })
     if (id === "password") this.setState({ password: value })

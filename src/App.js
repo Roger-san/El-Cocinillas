@@ -36,7 +36,7 @@ export default class App extends Component {
             this.setState({ logged: true, userData: data.authorData })
             this.loadRecipes()
           }
-          console.log("data of login by token ", data, "the state is", this.state)
+          console.log("data of login by token:", data, "the state is:", this.state)
         })
         .catch((data) => console.error(data))
     } else {

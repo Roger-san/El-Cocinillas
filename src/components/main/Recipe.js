@@ -1,6 +1,6 @@
 import RecipeCard from "../RecipeCard"
 import React, { Component } from "react"
-import hamburger from "../../hamburger.jpg"
+import emptyImage from "../../empty-image.jpg"
 
 export default class Recipe extends Component {
   constructor() {
@@ -60,8 +60,8 @@ export default class Recipe extends Component {
           <img
             id={this.giveIdName()}
             className="recipe-image"
-            src={this.getImageData() || hamburger}
-            alt="hamburger"
+            src={this.getImageData() || emptyImage}
+            alt="emptyImage"
           ></img>
           <div id="name-description-container">
             <h2>{this.props.data.recipeName}</h2>
