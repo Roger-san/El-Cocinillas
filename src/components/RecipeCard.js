@@ -23,15 +23,11 @@ class RecipeCard extends React.Component {
   }
   getImageData = () => {
     if (this.props.recipe.frontImage) {
-      const cloud = true
-      const heroku = cloud
-        ? "https://elcocinillas-api.herokuapp.com"
-        : "http://localhost:3001"
-      const URL = `${heroku}/api/recipe/image/${this.props.recipe.frontImage}`
-      fetch(URL)
+      // const LOCAL = "http://localhost:3001"
+      const HEROKU = "https://elcocinillas-api.herokuapp.com"
+      fetch(`${HEROKU}/api/recipe/image/${this.props.recipe.frontImage}`)
         .then((data) => data.json())
         .then((data) => {
-          console.log(data.data[0])
           if (data.success) {
             const img = document.getElementById(`recipe-img-${this.giveIdNumber()}`)
             if (img && data.data[0]) {

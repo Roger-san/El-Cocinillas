@@ -15,17 +15,15 @@ export default class Login extends Component {
     const { email, password } = this.state
     const user = { email: email, password: password }
     const divErrorMesssage = document.getElementById("error-message")
-
-    const cloud = true
-    const heroku = cloud
-      ? "https://elcocinillas-api.herokuapp.com"
-      : "http://localhost:3001"
-    const URL = `${heroku}/api/users/login`
+    // const LOCAL = "http://localhost:3001"
+    const HEROKU = "https://elcocinillas-api.herokuapp.com"
+    const URL = `${HEROKU}/api/login/login`
     const opts = {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(user)
     }
+    console.log("data")
     fetch(URL, opts)
       .then((data) => data.json())
       .then((data) => {
@@ -38,6 +36,7 @@ export default class Login extends Component {
       .catch((err) => console.log(err))
   }
   handleOnChange = (event) => {
+    console.log(this.state)
     const { id, value } = event.target
     if (id === "email") this.setState({ email: value })
     if (id === "password") this.setState({ password: value })

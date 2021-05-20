@@ -8,17 +8,9 @@ export default class Recipe extends Component {
     this.state = { authorRecipes: "" }
   }
   componentDidMount = () => {
-    const cloud = true
-    const heroku = cloud
-      ? "https://elcocinillas-api.herokuapp.com"
-      : "http://localhost:3001"
-    const URL = `${heroku}/api/users/authorRecipes`
-    const opts = {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ author: this.props.data.author })
-    }
-    fetch(URL, opts)
+    // const LOCAL = "http://localhost:3001"
+    const HEROKU = "https://elcocinillas-api.herokuapp.com"
+    fetch(`${HEROKU}/api/user/authorRecipes/${this.props.data.author}`)
       .then((data) => data.json())
       .then((data) => {
         this.setState({ authorRecipes: data.data })
@@ -33,15 +25,11 @@ export default class Recipe extends Component {
     }
   }
   getImageData = () => {
-    const imageName = this.props.data.frontImage
     if (this.props.data.frontImage) {
-      const cloud = true
-      const heroku = cloud
-        ? "https://elcocinillas-api.herokuapp.com"
-        : "http://localhost:3001"
-      const URL = `${heroku}/api/recipe/image/${imageName}`
-      console.log(imageName)
-      fetch(URL)
+      const imageName = this.props.data.frontImage
+      // const LOCAL = "http://localhost:3001"
+      const HEROKU = "https://elcocinillas-api.herokuapp.com"
+      fetch(`${HEROKU}/api/recipe/image/${imageName}`)
         .then((data) => data.json())
         .then((data) => {
           if (data.success && data.data[0]) {

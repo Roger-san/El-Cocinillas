@@ -270,13 +270,7 @@ label {
   flex-direction: column;
   justify-content: left;
 }
-.recipe-image {
-  width: 100%;
-  max-width: 50% !important;
-  overflow: hidden;
-  min-height: 200px;
-  height: auto;
-}
+
 #name-description-container {
   margin-top: 1.5rem;
 }
@@ -328,10 +322,25 @@ nav {
   margin-bottom: 1rem;
   background-color: #e7e9eb !important;
 }
+.dropdown-menu,
+.nav-link {
+  text-align: right !important;
+}
+.dropdown-menu {
+  width: 35%;
+  align-self: flex-end;
+}
+.nav-item {
+  display: flex;
+  flex-flow: column;
+}
+#navbarNavDropdown {
+  justify-content: flex-end;
+}
 @media only screen and (max-width: 600px) {
   footer * {
     margin: 0.2rem !important;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
   }
   .card {
     width: 100%;
@@ -346,12 +355,19 @@ nav {
   }
   .recipe-image {
     object-fit: cover;
+    padding: 1rem;
+    max-height: 400px;
   }
   #name-description-container {
     padding-left: 1rem;
   }
-  #recipe-image {
+  .recipe-image {
     border-radius: 8px;
+    width: 100%;
+  }
+  .card-img-top {
+    max-height: 400px;
+    object-fit: cover;
   }
 }
 @media only screen and (min-width: 900px) {
@@ -363,10 +379,12 @@ nav {
   .recipe-pag {
     width: 60% !important;
   }
-  #recipe-image {
+  .recipe-image {
+    width: 100%;
     max-width: 50%;
-    height: 300px;
+    max-height: 300px;
     border-radius: 8px 0 0 8px;
+    object-fit: cover;
   }
   #top-secction {
     display: flex;
@@ -390,5 +408,13 @@ nav {
   }
   #top-form {
     margin: 1rem;
+  }
+  .card-img-top {
+    height: 250px;
+    object-fit: cover;
+  }
+  #preview {
+    min-width: 35%;
+    object-fit: cover;
   }
 }

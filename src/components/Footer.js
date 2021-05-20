@@ -6,7 +6,8 @@ export default class Footer extends React.Component {
       <footer>
         <p>
           This project is made by Roger Sanchez if you like his project you can find him
-          in <a href="https://www.linkedin.com/in/roger-sanchez/">linkedin.com</a> ❤️
+          in <a href="https://www.linkedin.com/in/roger-sanchez/">linkedin</a> and{" "}
+          <a href="https://github.com/Roger-san">Git</a>❤️
         </p>
       </footer>
     )

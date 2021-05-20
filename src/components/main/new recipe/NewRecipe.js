@@ -65,13 +65,10 @@ export default class NewRecipe extends Component {
   }
   handleSubmit = (event) => {
     event.preventDefault()
-    const cloud = true
-    const heroku = cloud
-      ? "https://elcocinillas-api.herokuapp.com"
-      : "http://localhost:3001"
-
+    const LOCAL = "http://localhost:3001"
+    const HEROKU = "https://elcocinillas-api.herokuapp.com"
     if (document.querySelector("input[type=file]").files[0]) {
-      const URLIMAGE = `${heroku}/api/recipe/new-picture`
+      const URLIMAGE = `${LOCAL}/api/create/new-picture`
       const file = document.querySelector("input[type=file]").files[0]
       var reader = new FileReader()
       reader.readAsDataURL(file)
@@ -91,13 +88,13 @@ export default class NewRecipe extends Component {
     }
     const userData = this.props.userData
     userData.recipes.push(this.state)
-    const URL2 = `${heroku}/api/recipe/new-recipe`
+    const URL = `${HEROKU}/api/create/new-recipe`
     const opts2 = {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ newRecipe: this.state, userData: userData })
     }
-    fetch(URL2, opts2)
+    fetch(URL, opts2)
       .then((data) => data.json())
       .then((data) => {
         if (data.success) {
@@ -111,22 +108,23 @@ export default class NewRecipe extends Component {
     if (
       event.target.id === "fileImage" &&
       document.querySelector("input[type=file]").files[0]
-    ) {
-      // window.URL = window.URL || window.webkitURL
-      const preview = document.getElementById("preview")
-      const file = document.querySelector("input[type=file]").files[0]
-      var reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => {
-        preview.src = reader.result
-        this.setState({ frontImage: file.name })
-        if (!preview.classList.contains("width")) {
-          preview.classList.toggle("width")
-        }
+    )
+      this.renderImage()
+    else this.handleValuesChange(event.target.id, event.target.value)
+  }
+  renderImage = () => {
+    const preview = document.getElementById("preview")
+    const file = document.querySelector("input[type=file]").files[0]
+    var reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => {
+      preview.src = reader.result
+      this.setState({ frontImage: file.name })
+      if (!preview.classList.contains("width")) {
+        preview.classList.toggle("width")
       }
-      return this.handleValuesChange("frontImage", file.name)
     }
-    this.handleValuesChange(event.target.id, event.target.value)
+    return this.handleValuesChange("frontImage", file.name)
   }
   render() {
     return (

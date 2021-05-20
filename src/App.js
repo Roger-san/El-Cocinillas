@@ -1,5 +1,4 @@
 /* eslint-disable default-case */
-// import SeachBar from "./components/nav/SearchBar"
 import Logo from "./components/nav/Logo"
 import RecipeCard from "./components/RecipeCard"
 import VoidCard from "./components/VoidCard"
@@ -27,19 +26,10 @@ export default class App extends Component {
     }
   }
   componentDidMount = () => {
-    const cloud = true
     if (localStorage.token_el_cocinillas) {
-      const token = { token: localStorage.token_el_cocinillas }
-      const heroku = cloud
-        ? "https://elcocinillas-api.herokuapp.com"
-        : "http://localhost:3001"
-      const URL = `${heroku}/api/users/token`
-      const opts = {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(token)
-      }
-      fetch(URL, opts)
+      // const LOCAL = "http://localhost:3001"
+      const HEROKU = "https://elcocinillas-api.herokuapp.com"
+      fetch(`${HEROKU}/api/login/token/${localStorage.token_el_cocinillas}`)
         .then((data) => data.json())
         .then((data) => {
           if (data) {
@@ -58,21 +48,9 @@ export default class App extends Component {
   }
   loadRecipes = (pagePosition = 0) => {
     this.setState({ page: "", renderedRecipes: "" })
-
-    const cloud = true
-    const heroku = cloud
-      ? "https://elcocinillas-api.herokuapp.com"
-      : "http://localhost:3001"
-    const skip = {
-      skip: pagePosition * 12
-    }
-    const opts = {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(skip)
-    }
-    const URL = `${heroku}/api/recipes`
-    fetch(URL, opts)
+    // const LOCAL = "http://localhost:3001"
+    const HEROKU = "https://elcocinillas-api.herokuapp.com"
+    fetch(`${HEROKU}/api/recipes/${pagePosition * 12}`)
       .then((data) => data.json())
       .then((data) => {
         this.setState({
@@ -192,13 +170,11 @@ export default class App extends Component {
   render() {
     return (
       <>
-        <nav id="nav" className="navbar navbar-expand-lg navbar-light ">
+        <nav id="nav" className="navbar navbar-expand-lg navbar-light bg-light">
           <Logo
             changePage={this.changePage}
             changePaginationPosition={this.changePaginationPosition}
           />
-
-          {/* <SeachBar /> */}
           <Dropdown
             userData={this.state.userData}
             logged={this.state.logged}

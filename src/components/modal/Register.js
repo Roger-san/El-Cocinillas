@@ -26,12 +26,9 @@ export default class Register extends Component {
     const { author, email, password } = this.state
     const newUser = { author: author, email: email, password: password }
     const divErrorMesssage = document.getElementById("error-message")
-    const cloud = true
-    const heroku = cloud
-      ? "https://elcocinillas-api.herokuapp.com"
-      : "http://localhost:3001"
-
-    const URL = `${heroku}/api/users/register`
+    // const LOCAL = "http://localhost:3001"
+    const HEROKU = "https://elcocinillas-api.herokuapp.com"
+    const URL = `${HEROKU}/api/user/register`
     const opts = {
       method: "POST",
       headers: { "content-type": "application/json" },
