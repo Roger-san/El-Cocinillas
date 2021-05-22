@@ -65,10 +65,10 @@ export default class NewRecipe extends Component {
   }
   handleSubmit = (event) => {
     event.preventDefault()
-    const LOCAL = "http://localhost:3001"
+    // const LOCAL = "http://localhost:3001"
     const HEROKU = "https://elcocinillas-api.herokuapp.com"
     if (document.querySelector("input[type=file]").files[0]) {
-      const URLIMAGE = `${LOCAL}/api/create/new-picture`
+      const URLIMAGE = `${HEROKU}/api/create/new-picture`
       const file = document.querySelector("input[type=file]").files[0]
       var reader = new FileReader()
       reader.readAsDataURL(file)
@@ -185,7 +185,6 @@ export default class NewRecipe extends Component {
               type="file"
               accept="image/*"
               id="fileImage"
-              capture="camera"
               onChange={this.handleChange}
             />
           </label>

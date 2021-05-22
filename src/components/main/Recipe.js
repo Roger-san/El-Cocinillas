@@ -10,11 +10,30 @@ export default class Recipe extends Component {
   componentDidMount = () => {
     // const LOCAL = "http://localhost:3001"
     const HEROKU = "https://elcocinillas-api.herokuapp.com"
+
     fetch(`${HEROKU}/api/user/authorRecipes/${this.props.data.author}`)
       .then((data) => data.json())
       .then((data) => {
         this.setState({ authorRecipes: data.data })
       })
+
+    const imgElement = document.getElementById(this.props.data.frontImage)
+    const imageName = this.props.data.frontImage
+    if (imageName && imgElement) {
+      if (!sessionStorage[imageName]) {
+        fetch(`${HEROKU}/api/recipe/image/${imageName}`)
+          .then((image) => image.json())
+          .then((image) => {
+            if (image.success) {
+              console.log(image)
+              imgElement.src = image.data
+              sessionStorage[image.name] = image.data
+            }
+          })
+      } else {
+        imgElement.src = sessionStorage[imageName]
+      }
+    }
   }
 
   giveIdName = () => {
@@ -24,23 +43,7 @@ export default class Recipe extends Component {
       return imageName
     }
   }
-  getImageData = () => {
-    if (this.props.data.frontImage) {
-      const imageName = this.props.data.frontImage
-      // const LOCAL = "http://localhost:3001"
-      const HEROKU = "https://elcocinillas-api.herokuapp.com"
-      fetch(`${HEROKU}/api/recipe/image/${imageName}`)
-        .then((data) => data.json())
-        .then((data) => {
-          if (data.success && data.data[0]) {
-            const img = document.getElementById(imageName)
-            if (img) {
-              img.src = data.data[0].data
-            }
-          }
-        })
-    }
-  }
+  getImageData = () => {}
 
   renderAuthorRecipes = () => {
     return this.state.authorRecipes.map((recipe, i) => (

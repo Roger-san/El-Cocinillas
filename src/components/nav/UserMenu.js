@@ -10,51 +10,49 @@ export default class UserMenu extends Component {
   render() {
     return (
       <>
-        <div className="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul className="navbar-nav">
-            <li className="nav-item dropdown">
+        <ul className="navbar-nav">
+          <li className="nav-item dropdown">
+            <a
+              className="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdownMenuLink"
+              role="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              {this.props.userData.author.split(" ")[0]}
+            </a>
+            <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               <a
-                className="nav-link dropdown-toggle"
+                className={`dropdown-item ${
+                  this.props.userData.recipes.length ? null : "disabled"
+                }`}
                 href="#"
-                id="navbarDropdownMenuLink"
-                role="button"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
+                id="authorRecipes"
+                onClick={this.handleOnClick}
               >
-                {this.props.userData.author.split(" ")[0]}
+                Recipes
               </a>
-              <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a
-                  className={`dropdown-item ${
-                    this.props.userData.recipes.length ? null : "disabled"
-                  }`}
-                  href="#"
-                  id="authorRecipes"
-                  onClick={this.handleOnClick}
-                >
-                  Recipes
-                </a>
-                <a
-                  className="dropdown-item"
-                  id="newRecipe"
-                  href="#"
-                  onClick={this.handleOnClick}
-                >
-                  Create recipe
-                </a>
-                <a
-                  className="dropdown-item"
-                  id="logout"
-                  href="#"
-                  onClick={this.handleOnClick}
-                >
-                  Logout
-                </a>
-              </div>
-            </li>
-          </ul>
-        </div>
+              <a
+                className="dropdown-item"
+                id="newRecipe"
+                href="#"
+                onClick={this.handleOnClick}
+              >
+                Create recipe
+              </a>
+              <a
+                className="dropdown-item"
+                id="logout"
+                href="#"
+                onClick={this.handleOnClick}
+              >
+                Logout
+              </a>
+            </div>
+          </li>
+        </ul>
       </>
     )
   }
