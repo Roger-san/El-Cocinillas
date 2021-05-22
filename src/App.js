@@ -1,4 +1,3 @@
-/* eslint-disable default-case */
 import Logo from "./components/nav/Logo"
 import RecipeCard from "./components/RecipeCard"
 import VoidCard from "./components/VoidCard"

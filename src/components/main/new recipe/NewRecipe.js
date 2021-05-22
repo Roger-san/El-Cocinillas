@@ -1,4 +1,3 @@
-/* eslint-disable default-case */
 import React, { Component } from "react"
 import Steps from "./Steps"
 import Ingredients from "./Ingredients"

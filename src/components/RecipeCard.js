@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react"
 import emptyImage from "../empty-image.jpg"
 class RecipeCard extends React.Component {

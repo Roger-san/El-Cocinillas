@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable default-case */
 import React, { Component } from "react"
 
 export default class Register extends Component {
