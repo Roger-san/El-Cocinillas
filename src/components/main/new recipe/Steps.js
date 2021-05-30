@@ -1,14 +1,16 @@
 import React, { Component } from "react"
 
 export default class Steps extends Component {
+  // calls the handleListsQuantityChange to add or delete a li
   handleClick = (event) => {
     this.props.handleListsQuantityChange(event, this.props.position)
   }
-  handleChange = () => {
+  // saves all the steps data and sends it to the NewRecipe state
+  handleChange = (event) => {
     const allSteps = Array.from(document.getElementsByClassName("step")).map(
       (x) => x.value
     )
-    this.props.handleValuesChange("steps", allSteps)
+    this.props.saveList("steps", allSteps)
   }
   render() {
     return (

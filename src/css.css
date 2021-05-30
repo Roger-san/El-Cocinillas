@@ -63,7 +63,7 @@ footer > p {
 
 /* new recipe */
 
-#recipe-name {
+#recipeName {
   display: block;
   width: 100%;
   height: 3rem;
@@ -72,7 +72,7 @@ footer > p {
   border: 0px;
   border-bottom: 1px rgb(118, 118, 118) solid;
 }
-#recipe-name:focus-visible,
+#recipeName:focus-visible,
 #description:focus-visible {
   outline: 0px !important;
 }
@@ -162,7 +162,7 @@ footer > p {
   height: 3rem;
   padding: 0.5rem;
 }
-#fileImage {
+#frontImage {
   display: none;
 }
 #file-button {
@@ -349,10 +349,14 @@ nav {
 #navbarNavDropdown {
   justify-content: flex-end;
 }
+/* search */
+.error {
+  box-shadow: #dc3545 0px 0px 5px 1px !important;
+}
 @media only screen and (max-width: 600px) {
   footer * {
     margin: 0.2rem !important;
-    font-size: 0.7rem;
+    font-size: 0.9rem;
   }
   .card {
     width: 100%;
@@ -363,11 +367,12 @@ nav {
   }
   .recipe-image {
     object-fit: cover;
-    padding: 1rem;
+    padding: 0rem;
     max-height: 400px;
   }
-  #name-description-container {
-    padding-left: 1rem;
+  #ingredients-container,
+  #steps-container {
+    margin: 1rem 0px;
   }
   .recipe-image {
     border-radius: 8px;
@@ -376,6 +381,9 @@ nav {
   .card-img-top {
     max-height: 400px;
     object-fit: cover;
+  }
+  .form-control {
+    width: auto !important;
   }
 }
 @media only screen and (min-width: 900px) {
@@ -414,5 +422,8 @@ nav {
   .card-img-top {
     height: 250px;
     object-fit: cover;
+  }
+  .author-recipes-container h3 {
+    margin-left: 1rem;
   }
 }

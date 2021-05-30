@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 
 export default class UserMenu extends Component {
+  // open the user menu options or logout
   handleOnClick = (event) => {
     if (event.target.id === "logout") this.props.logOut(event)
     else this.props.changePage(event.target.id)

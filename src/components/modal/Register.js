@@ -5,26 +5,19 @@ export default class Register extends Component {
     super()
     this.state = { author: "", email: "", password: "" }
   }
+  // saves the input values on the state
   handleOnChange = (event) => {
     const { id, value } = event.target
-    switch (id) {
-      case "author":
-        this.setState({ author: value })
-        break
-      case "email":
-        this.setState({ email: value })
-        break
-      case "password":
-        this.setState({ password: value })
-        break
-    }
+    this.setState({ [id]: value })
   }
+  // post the form data if is a success closes the modal
+  // else show a error message to the user
   handleSubmit = (event) => {
     event.preventDefault()
     const { author, email, password } = this.state
     const newUser = { author: author, email: email, password: password }
     const divErrorMesssage = document.getElementById("error-message")
-    // const LOCAL = "http://localhost:3001"
+    const LOCAL = "http://localhost:3001"
     const HEROKU = "https://elcocinillas-api.herokuapp.com"
     const URL = `${HEROKU}/api/user/register`
     const opts = {
@@ -58,7 +51,7 @@ export default class Register extends Component {
               type="text"
               name="author"
               id="author"
-              max="40"
+              max="20"
               className="form-control"
               onChange={this.handleOnChange}
               required

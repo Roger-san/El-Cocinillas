@@ -17,25 +17,7 @@ export default class NewRecipe extends Component {
       frontImage: ""
     }
   }
-  handleValuesChange = (type, data) => {
-    switch (type) {
-      case "recipe-name":
-        this.setState({ recipeName: data })
-        break
-      case "description":
-        this.setState({ description: data })
-        break
-      case "ingredients":
-        this.setState({ ingredients: data })
-        break
-      case "steps":
-        this.setState({ steps: data })
-        break
-      case "fileImage":
-        this.setState({ frontImage: data })
-        break
-    }
-  }
+  // adds and deletes the li of steps and ingrdients
   handleListsQuantityChange = (event, position) => {
     switch (event.target.className) {
       case "add-ingredient":
@@ -62,9 +44,11 @@ export default class NewRecipe extends Component {
         break
     }
   }
-  handleSubmit = (event) => {
+  // send a POST with the img data and another with the
+  // user and state data
+  handleOnSubmit = (event) => {
     event.preventDefault()
-    // const LOCAL = "http://localhost:3001"
+    const LOCAL = "http://localhost:3001"
     const HEROKU = "https://elcocinillas-api.herokuapp.com"
     if (document.querySelector("input[type=file]").files[0]) {
       const URLIMAGE = `${HEROKU}/api/create/new-picture`
@@ -103,14 +87,21 @@ export default class NewRecipe extends Component {
       })
       .catch((err) => console.log(err))
   }
-  handleChange = (event) => {
-    if (
-      event.target.id === "fileImage" &&
-      document.querySelector("input[type=file]").files[0]
-    )
+  // saves the data into the state
+  // if is a img calls renderImage too
+  handleOnChange = (event) => {
+    const id = event.target.id
+    if (id === "frontImage" && document.querySelector("input[type=file]").files[0]) {
       this.renderImage()
-    else this.handleValuesChange(event.target.id, event.target.value)
+      this.setState({ [id]: document.querySelector("input[type=file]").files[0].name })
+    } else this.setState({ [id]: event.target.value })
   }
+  // same as handleOnChange but with the
+  // steps and ingrdients list
+  saveList = (type, data) => {
+    this.setState({ [type]: data })
+  }
+  // shows the loaded img on top of the page
   renderImage = () => {
     const preview = document.getElementById("preview")
     const file = document.querySelector("input[type=file]").files[0]
@@ -118,16 +109,14 @@ export default class NewRecipe extends Component {
     reader.readAsDataURL(file)
     reader.onload = () => {
       preview.src = reader.result
-      this.setState({ frontImage: file.name })
       if (!preview.classList.contains("width")) {
         preview.classList.toggle("width")
       }
     }
-    return this.handleValuesChange("frontImage", file.name)
   }
   render() {
     return (
-      <form id="new-recipe-form" onSubmit={this.handleSubmit}>
+      <form id="new-recipe-form" onSubmit={this.handleOnSubmit}>
         <div id="top-form">
           <img
             src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
@@ -138,8 +127,8 @@ export default class NewRecipe extends Component {
             <input
               type="text"
               name="recipeName"
-              id="recipe-name"
-              onChange={this.handleChange}
+              id="recipeName"
+              onChange={this.handleOnChange}
               placeholder="Recipe name"
               minLength="3"
               maxLength="40"
@@ -150,7 +139,7 @@ export default class NewRecipe extends Component {
               id="description"
               name="description"
               rows="5"
-              onChange={this.handleChange}
+              onChange={this.handleOnChange}
               maxLength="150"
             ></textarea>
           </div>
@@ -162,7 +151,7 @@ export default class NewRecipe extends Component {
               position={i}
               key={`ingredient-${i}`}
               handleListsQuantityChange={this.handleListsQuantityChange}
-              handleValuesChange={this.handleValuesChange}
+              saveList={this.saveList}
             />
           ))}
         </div>
@@ -173,7 +162,7 @@ export default class NewRecipe extends Component {
               position={i}
               key={`step-${i}`}
               handleListsQuantityChange={this.handleListsQuantityChange}
-              handleValuesChange={this.handleValuesChange}
+              saveList={this.saveList}
             />
           ))}
         </div>
@@ -183,8 +172,8 @@ export default class NewRecipe extends Component {
             <input
               type="file"
               accept="image/*"
-              id="fileImage"
-              onChange={this.handleChange}
+              id="frontImage"
+              onChange={this.handleOnChange}
             />
           </label>
           <button id="form-button" type="submit">

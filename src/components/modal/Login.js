@@ -9,12 +9,14 @@ export default class Login extends Component {
       message: ""
     }
   }
+  // post the form data if is a success closes the modal
+  // else show a error message to the user
   handleSubmit = (event) => {
     event.preventDefault()
     const { email, password } = this.state
     const user = { email: email, password: password }
     const divErrorMesssage = document.getElementById("error-message")
-    // const LOCAL = "http://localhost:3001"
+    const LOCAL = "http://localhost:3001"
     const HEROKU = "https://elcocinillas-api.herokuapp.com"
     const URL = `${HEROKU}/api/login/login`
     const opts = {
@@ -33,11 +35,14 @@ export default class Login extends Component {
       })
       .catch((err) => console.log(err))
   }
+  // saves the input values on the state
   handleOnChange = (event) => {
     const { id, value } = event.target
     if (id === "email") this.setState({ email: value })
     if (id === "password") this.setState({ password: value })
   }
+  // changes to the register modal or
+  // close and reset the login values
   handleClick = (event) => {
     if (event.target.id === "register") this.props.handleChangeState()
     if (event.target.id === "close") {

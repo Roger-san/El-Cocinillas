@@ -1,10 +1,12 @@
 import React, { Component } from "react"
 
 export default class Ingredients extends Component {
+  // calls the handleListsQuantityChange to add or delete a li
   handleClick = (event) => {
     this.props.handleListsQuantityChange(event, this.props.position)
   }
-  handleChange = () => {
+  // saves all the ingredients data and sends it to the NewRecipe state
+  handleChange = (event) => {
     const allIngredients = [...document.getElementsByClassName("ingredient-name")].map(
       (x) => x.value
     )
@@ -15,7 +17,7 @@ export default class Ingredients extends Component {
       ingredient: ingredient,
       quantity: allQuantity[i]
     }))
-    this.props.handleValuesChange("ingredients", allIngredientsCuantity)
+    this.props.saveList("ingredients", allIngredientsCuantity)
   }
   render() {
     return (

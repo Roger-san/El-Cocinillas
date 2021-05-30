@@ -7,16 +7,31 @@ export default class Recipe extends Component {
     super()
     this.state = { authorRecipes: "" }
   }
+  // takes all the author recipes and save them into
+  // the state then render the img
   componentDidMount = () => {
-    // const LOCAL = "http://localhost:3001"
+    const LOCAL = "http://localhost:3001"
     const HEROKU = "https://elcocinillas-api.herokuapp.com"
-
     fetch(`${HEROKU}/api/user/authorRecipes/${this.props.data.author}`)
       .then((data) => data.json())
       .then((data) => {
         this.setState({ authorRecipes: data.data })
+        this.renderImg()
       })
-
+  }
+  // if the user loads other recipe this function helps
+  // changing the image
+  componentDidUpdate = (oldProps) => {
+    if (this.props.data.frontImage !== oldProps.data.frontImage) {
+      console.log("object")
+      this.renderImg()
+    }
+  }
+  // dowload and save the data of the img in sesion
+  // storage (for future uses) and before that render it
+  renderImg = () => {
+    const LOCAL = "http://localhost:3001"
+    const HEROKU = "https://elcocinillas-api.herokuapp.com"
     const imgElement = document.getElementById(this.props.data.frontImage)
     const imageName = this.props.data.frontImage
     if (imageName && imgElement) {
@@ -35,7 +50,8 @@ export default class Recipe extends Component {
       }
     }
   }
-
+  // helps to create a unique id name using the index of the
+  // recipe
   giveIdName = () => {
     if (this.props.data.frontImage) {
       let imageName = this.props.data.frontImage.split("\\")
@@ -43,8 +59,7 @@ export default class Recipe extends Component {
       return imageName
     }
   }
-  getImageData = () => {}
-
+  // get all the author recipes to render on the bottom page
   renderAuthorRecipes = () => {
     return this.state.authorRecipes.map((recipe, i) => (
       <RecipeCard
@@ -63,7 +78,7 @@ export default class Recipe extends Component {
           <img
             id={this.giveIdName()}
             className="recipe-image"
-            src={this.getImageData() || emptyImage}
+            src={emptyImage}
             alt="emptyImage"
           ></img>
           <div id="name-description-container">

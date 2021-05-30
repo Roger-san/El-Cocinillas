@@ -6,6 +6,8 @@ export default class MainModal extends Component {
     super()
     this.state = { login: true }
   }
+  // changes the state if the user login successfully
+  // changing the login for the user menu
   handleChangeState = () => {
     this.setState({ login: !this.state.login })
   }

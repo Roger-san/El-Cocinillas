@@ -8,7 +8,7 @@ import NewRecipe from "./components/main/new recipe/NewRecipe"
 import Recipe from "./components/main/Recipe"
 import Pagination from "./components/Pagination"
 import Loading from "./components/Loading"
-
+import Searcher from "./components/nav/Searcher"
 import React, { Component } from "react"
 
 export default class App extends Component {
@@ -21,12 +21,14 @@ export default class App extends Component {
       actualRecipe: "",
       renderedRecipes: [],
       totalRecipes: "",
-      pagePosition: 1
+      pagePosition: 1,
+      recipesList: ""
     }
   }
+  // looks for a token to login and calls loadRecipes()
   componentDidMount = () => {
     if (localStorage.token_el_cocinillas) {
-      // const LOCAL = "http://localhost:3001"
+      const LOCAL = "http://localhost:3001"
       const HEROKU = "https://elcocinillas-api.herokuapp.com"
       fetch(`${HEROKU}/api/login/token/${localStorage.token_el_cocinillas}`)
         .then((data) => data.json())
@@ -42,29 +44,36 @@ export default class App extends Component {
       this.loadRecipes()
     }
   }
+  // is called when a new recipe is added to update the user data
   changeUserData = (userData) => {
     this.setState({ userData: userData.data })
   }
+  // load multiples of 12 recipes and all the names of the
+  // recipes for the datalist of the searcher
   loadRecipes = (pagePosition = 0) => {
     this.setState({ page: "", renderedRecipes: "" })
-    // const LOCAL = "http://localhost:3001"
+    const LOCAL = "http://localhost:3001"
     const HEROKU = "https://elcocinillas-api.herokuapp.com"
     fetch(`${HEROKU}/api/recipes/${pagePosition * 12}`)
       .then((data) => data.json())
       .then((data) => {
         this.setState({
           page: "recipes",
-          renderedRecipes: data.data,
-          totalRecipes: data.pagesLength
+          renderedRecipes: data.recipes,
+          totalRecipes: data.totalRecipes,
+          recipesList: data.recipesList
         })
       })
   }
+  // delete the token and deletes the userData state
   logOut = () => {
     if (localStorage.token_el_cocinillas) localStorage.removeItem("token_el_cocinillas")
     if (this.state.page === "newRecipe" || this.state.page === "authorRecipes")
       this.setState({ logged: false, page: "recipes", userData: "" })
     else this.setState({ logged: false, userData: "" })
   }
+  // logs the user when he uses the register or the login forms
+  // and saves the token
   userLogged = (data) => {
     if (data.token) {
       localStorage.token_el_cocinillas = data.token
@@ -79,17 +88,21 @@ export default class App extends Component {
         document.body.className = "no-modal"
     }
   }
+  // changing this state the user renders the main sections
   changePage = (pageName) => {
     this.setState({ page: pageName })
   }
+  // render the clicked recipe page
   renderRecipe = (data) => {
     this.setState({ page: "recipe", actualRecipe: data })
     document.location.href = "#nav"
   }
+  // changes the .active number of the pagination component and loads the new recipes
   changePaginationPosition = (pagePosition) => {
     this.setState({ pagePosition: pagePosition })
     this.loadRecipes(pagePosition - 1)
   }
+  // render the main section of the page
   renderContainer = () => {
     switch (this.state.page) {
       case "loadingRecipes":
@@ -174,6 +187,10 @@ export default class App extends Component {
             changePage={this.changePage}
             changePaginationPosition={this.changePaginationPosition}
           />
+          <Searcher
+            recipesNames={this.state.recipesList}
+            renderRecipe={this.renderRecipe}
+          />
           <Dropdown
             userData={this.state.userData}
             logged={this.state.logged}
@@ -182,7 +199,6 @@ export default class App extends Component {
           />
         </nav>
         {this.renderContainer()}
-
         <Footer />
         {this.state.logged ? undefined : <MainModal userLogged={this.userLogged} />}
         {this.state.totalRecipes > 0 ? undefined : <Loading />}
