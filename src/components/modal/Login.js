@@ -18,7 +18,7 @@ export default class Login extends Component {
     const divErrorMesssage = document.getElementById("error-message")
     const LOCAL = "http://localhost:3001"
     const HEROKU = "https://elcocinillas-api.herokuapp.com"
-    const URL = `${HEROKU}/api/login/login`
+    const URL = `${LOCAL}/api/login/login`
     const opts = {
       method: "POST",
       headers: { "content-type": "application/json" },

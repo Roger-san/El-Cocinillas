@@ -16,7 +16,7 @@ export default class App extends Component {
     super()
     this.state = {
       logged: false,
-      page: "loadingRecipes",
+      page: "",
       userData: "",
       actualRecipe: "",
       renderedRecipes: [],
@@ -27,17 +27,18 @@ export default class App extends Component {
   }
   // looks for a token to login and calls loadRecipes()
   componentDidMount = () => {
+    document.body.style.backgroundColor = "rgba(221, 219, 219, 0.2)"
     if (localStorage.token_el_cocinillas) {
       const LOCAL = "http://localhost:3001"
       const HEROKU = "https://elcocinillas-api.herokuapp.com"
-      fetch(`${HEROKU}/api/login/token/${localStorage.token_el_cocinillas}`)
+      fetch(`${LOCAL}/api/login/token/${localStorage.token_el_cocinillas}`)
         .then((data) => data.json())
         .then((data) => {
-          if (data) {
+          if (data.authorData) {
             this.setState({ logged: true, userData: data.authorData })
             this.loadRecipes()
-          }
-          console.log("data of login by token:", data, "the state is:", this.state)
+            console.log("data of login by token:", data, "the state is:", this.state)
+          } else this.loadRecipes()
         })
         .catch((data) => console.error(data))
     } else {
@@ -54,7 +55,7 @@ export default class App extends Component {
     this.setState({ page: "", renderedRecipes: "" })
     const LOCAL = "http://localhost:3001"
     const HEROKU = "https://elcocinillas-api.herokuapp.com"
-    fetch(`${HEROKU}/api/recipes/${pagePosition * 12}`)
+    fetch(`${LOCAL}/api/recipes/${pagePosition * 12}`)
       .then((data) => data.json())
       .then((data) => {
         this.setState({
@@ -105,23 +106,6 @@ export default class App extends Component {
   // render the main section of the page
   renderContainer = () => {
     switch (this.state.page) {
-      case "loadingRecipes":
-        return (
-          <div className="container">
-            <VoidCard />
-            <VoidCard />
-            <VoidCard />
-            <VoidCard />
-            <VoidCard />
-            <VoidCard />
-            <VoidCard />
-            <VoidCard />
-            <VoidCard />
-            <VoidCard />
-            <VoidCard />
-            <VoidCard />
-          </div>
-        )
       case "newRecipe":
         return (
           <div className="container">
@@ -181,8 +165,8 @@ export default class App extends Component {
   }
   render() {
     return (
-      <>
-        <nav id="nav" className="navbar navbar-expand-lg navbar-light bg-light">
+      <div id="body">
+        <nav id="nav" className="navbar navbar-expand-lg navbar-light">
           <Logo
             changePage={this.changePage}
             changePaginationPosition={this.changePaginationPosition}
@@ -198,11 +182,28 @@ export default class App extends Component {
             changePage={this.changePage}
           />
         </nav>
-        {this.renderContainer()}
+        {this.state.page ? (
+          this.renderContainer()
+        ) : (
+          <div className="container">
+            <VoidCard />
+            <VoidCard />
+            <VoidCard />
+            <VoidCard />
+            <VoidCard />
+            <VoidCard />
+            <VoidCard />
+            <VoidCard />
+            <VoidCard />
+            <VoidCard />
+            <VoidCard />
+            <VoidCard />
+          </div>
+        )}
         <Footer />
         {this.state.logged ? undefined : <MainModal userLogged={this.userLogged} />}
         {this.state.totalRecipes > 0 ? undefined : <Loading />}
-      </>
+      </div>
     )
   }
 }

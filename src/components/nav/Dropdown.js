@@ -11,7 +11,12 @@ class Dropdown extends React.Component {
             userData={this.props.userData}
           />
         ) : (
-          <a data-toggle="modal" data-target="#staticBackdrop" href="#staticBackdrop">
+          <a
+            id="login"
+            data-toggle="modal"
+            data-target="#staticBackdrop"
+            href="#staticBackdrop"
+          >
             Login
           </a>
         )}

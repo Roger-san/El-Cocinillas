@@ -20,7 +20,7 @@ class RecipeCard extends React.Component {
       if (!sessionStorage[imageName]) {
         const LOCAL = "http://localhost:3001"
         const HEROKU = "https://elcocinillas-api.herokuapp.com"
-        fetch(`${HEROKU}/api/recipe/image/${imageName}`)
+        fetch(`${LOCAL}/api/recipe/image/${imageName}`)
           .then((image) => image.json())
           .then((image) => {
             if (image.success) {

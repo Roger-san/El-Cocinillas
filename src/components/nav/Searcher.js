@@ -5,19 +5,20 @@ export default class Searcher extends Component {
     super()
     this.state = { inputValue: "" }
   }
-  // saves the input data to state
-  // if the input have the error class detele its
+  // saves the input data into the state
+  // if the input have the error class is deleted
   handleChange = (event) => {
     this.setState({ inputValue: event.target.value })
     if ([...document.getElementById("searchInput").classList].includes("error"))
       document.getElementById("searchInput").classList.toggle("error")
   }
-  // sends to the selected recipe page
+  // looks for the searched recipe if doesnt get a recipe
+  // toogles the error class in the input
   handleSubmit = (event) => {
     event.preventDefault()
     const LOCAL = "http://localhost:3001"
     const HEROKU = "https://elcocinillas-api.herokuapp.com"
-    fetch(`${HEROKU}/api/recipe/${this.state.inputValue}`)
+    fetch(`${LOCAL}/api/recipe/${this.state.inputValue}`)
       .then((recipe) => recipe.json())
       .then((recipe) => {
         if (recipe.recipe) {
@@ -45,7 +46,6 @@ export default class Searcher extends Component {
       )
     }
   }
-
   render() {
     return (
       <form className="form-inline my-2 my-lg-0" onSubmit={this.handleSubmit}>

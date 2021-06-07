@@ -1,6 +1,7 @@
 import RecipeCard from "../RecipeCard"
 import React, { Component } from "react"
 import emptyImage from "../../empty-image.jpg"
+import FastAverageColor from "fast-average-color"
 
 export default class Recipe extends Component {
   constructor() {
@@ -12,11 +13,12 @@ export default class Recipe extends Component {
   componentDidMount = () => {
     const LOCAL = "http://localhost:3001"
     const HEROKU = "https://elcocinillas-api.herokuapp.com"
-    fetch(`${HEROKU}/api/user/authorRecipes/${this.props.data.author}`)
+    fetch(`${LOCAL}/api/user/authorRecipes/${this.props.data.author}`)
       .then((data) => data.json())
       .then((data) => {
         this.setState({ authorRecipes: data.data })
         this.renderImg()
+        this.changeBackgroundColor()
       })
   }
   // if the user loads other recipe this function helps
@@ -25,7 +27,23 @@ export default class Recipe extends Component {
     if (this.props.data.frontImage !== oldProps.data.frontImage) {
       console.log("object")
       this.renderImg()
+      this.changeBackgroundColor()
     }
+  }
+  // get the primary color of the img and sets the background color
+  // of body
+  changeBackgroundColor = () => {
+    const fac = new FastAverageColor()
+    fac
+      .getColorAsync(document.querySelector("img"))
+      .then((color) => {
+        color = color.rgba.replace(",1)", ",0.25)")
+        document.body.style.backgroundColor = color
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+    fac.destroy()
   }
   // dowload and save the data of the img in sesion
   // storage (for future uses) and before that render it
@@ -36,7 +54,7 @@ export default class Recipe extends Component {
     const imageName = this.props.data.frontImage
     if (imageName && imgElement) {
       if (!sessionStorage[imageName]) {
-        fetch(`${HEROKU}/api/recipe/image/${imageName}`)
+        fetch(`${LOCAL}/api/recipe/image/${imageName}`)
           .then((image) => image.json())
           .then((image) => {
             if (image.success) {
