@@ -18,7 +18,7 @@ export default class Searcher extends Component {
     event.preventDefault()
     const LOCAL = "http://localhost:3001"
     const HEROKU = "https://elcocinillas-api.herokuapp.com"
-    fetch(`${LOCAL}/api/recipe/${this.state.inputValue}`)
+    fetch(`${HEROKU}/api/recipe/${this.state.inputValue}`)
       .then((recipe) => recipe.json())
       .then((recipe) => {
         if (recipe.recipe) {

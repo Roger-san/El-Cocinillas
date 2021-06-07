@@ -31,7 +31,7 @@ export default class App extends Component {
     if (localStorage.token_el_cocinillas) {
       const LOCAL = "http://localhost:3001"
       const HEROKU = "https://elcocinillas-api.herokuapp.com"
-      fetch(`${LOCAL}/api/login/token/${localStorage.token_el_cocinillas}`)
+      fetch(`${HEROKU}/api/login/token/${localStorage.token_el_cocinillas}`)
         .then((data) => data.json())
         .then((data) => {
           if (data.authorData) {
@@ -55,7 +55,7 @@ export default class App extends Component {
     this.setState({ page: "", renderedRecipes: "" })
     const LOCAL = "http://localhost:3001"
     const HEROKU = "https://elcocinillas-api.herokuapp.com"
-    fetch(`${LOCAL}/api/recipes/${pagePosition * 12}`)
+    fetch(`${HEROKU}/api/recipes/${pagePosition * 12}`)
       .then((data) => data.json())
       .then((data) => {
         this.setState({

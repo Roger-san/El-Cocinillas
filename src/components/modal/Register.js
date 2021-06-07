@@ -19,7 +19,7 @@ export default class Register extends Component {
     const divErrorMesssage = document.getElementById("error-message")
     const LOCAL = "http://localhost:3001"
     const HEROKU = "https://elcocinillas-api.herokuapp.com"
-    const URL = `${LOCAL}/api/user/register`
+    const URL = `${HEROKU}/api/user/register`
     const opts = {
       method: "POST",
       headers: { "content-type": "application/json" },

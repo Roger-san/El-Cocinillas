@@ -13,7 +13,7 @@ export default class Recipe extends Component {
   componentDidMount = () => {
     const LOCAL = "http://localhost:3001"
     const HEROKU = "https://elcocinillas-api.herokuapp.com"
-    fetch(`${LOCAL}/api/user/authorRecipes/${this.props.data.author}`)
+    fetch(`${HEROKU}/api/user/authorRecipes/${this.props.data.author}`)
       .then((data) => data.json())
       .then((data) => {
         this.setState({ authorRecipes: data.data })
@@ -54,7 +54,7 @@ export default class Recipe extends Component {
     const imageName = this.props.data.frontImage
     if (imageName && imgElement) {
       if (!sessionStorage[imageName]) {
-        fetch(`${LOCAL}/api/recipe/image/${imageName}`)
+        fetch(`${HEROKU}/api/recipe/image/${imageName}`)
           .then((image) => image.json())
           .then((image) => {
             if (image.success) {
